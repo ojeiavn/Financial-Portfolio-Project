@@ -1,0 +1,1 @@
+# [VIKTOR] - Endpoint for yfinance API
