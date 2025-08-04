@@ -1,0 +1,48 @@
+:root {
+  --bg-light: #48376C;     /* Lightest - used for background */
+  --bg-mid: #3B305A;       /* Medium - used for product cards */
+  --bg-dark: #2C2343;      /* Darkest - used for finance cards */
+}
+
+h1 {
+  text-align: center;
+}
+
+body {
+  background-color: var(--bg-light);
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: white;
+}
+
+/* Darkest cards for finance section (right-hand market stats) */
+.finance-card-left {
+  background-color: var(--bg-dark);
+  width: 30%;
+  border: 1px solid white;
+  padding: 1rem;
+  border-radius: 8px;
+  float: left;
+}
+
+.finance-card-right {
+  background-color: var(--bg-dark);
+  width: 30%;
+  border: 1px solid white;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+/* Mid-tone cards for product listings (left-hand APPLE, META, etc.) */
+.card {
+  background-color: var(--bg-mid);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.company-name {
+    text-align: right;
+}
+
+#sbc-title {
+    text-align: center;
+}
