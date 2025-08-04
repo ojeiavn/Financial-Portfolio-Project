@@ -5,7 +5,7 @@ function App() {
 
   return (
     <>
-    hello world from react
+    <div class="text-3xl text-blue-400">hello world from react</div>
     </>
   )
 }
