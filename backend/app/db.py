@@ -64,21 +64,53 @@ except Exception as e:
     print(f"Failed to create the database {e}")
 
 
-# sql = "INSERT INTO Passwords (Name, LoginID, Password, URL) VALUES(%s,%s,%s,%s)"
-# data = [('Steve','superuser','secret123','http://there.com'),
-#                      ('Jack','slipperysnake','letmein231','http://python.com'),
-#                      ('Fridah','lovescoffee','letitmarinade','http://java.com')]
+sql = "INSERT INTO Users VALUES(%s,%s,%s,%s)"
+data = [('Fridah','Fridah','Fridah@email.com','+1 123 456 7890'),
+        ('Iqra','Iqra Moalin','Iqra@email.com','+1 123 456 7891'),
+        ('Ojei','Ojei Imiavan','Ojei@email.com','+1 123 456 7892'),
+        ('Sreya','Sreya Ramachandran','Sreya@email.com','+1 123 456 7893'),
+        ('Viktor','Viktor Volgyi','Viktor@email.com','+1 123 456 7894')]
 
-# sql2 = "INSERT INTO Passwords(Name,LoginID,Password,URL,DeleteDate) VALUES(%s,%s,%s,%s,%s)"
-# data2 = ('Nick','omnipresent','nopasswordrequired','http://thatsmeinthecorner.com','1970-01-01 12:00:00')
+sql2 = "INSERT INTO Companies VALUES(%s,%s,%s,%s,%s)"
+data2 = [('NVDA', 'NVIDIA Corporation', 'United States', '408 486 2000', 'https://www.nvidia.com'),
+         ('INTC', 'Intel Corporation', 'United States', '408 765 8080', 'https://www.intel.com'),
+         ('AMD', 'Advanced Micro Devices, Inc.', 'United States', '408 749 4000', 'https://www.amd.com')]
 
-# try:
-#     for row in data:
-#         mycursor.execute(sql,row)
-#     mycursor.execute(sql2,data2)
-#     mydb.commit()
-# except Exception as e:
-#     print(f"Failed to insert data {e}")
-#     exit(4)
+sql3 = "INSERT INTO Products VALUES(%s,%s,%s)"
+data3 = [(1, 'NVDA', 'Stock'),
+         (2, 'INTC', 'Stock'),
+         (3, 'AMD', 'Stock'),
+         (4, '^IRX', 'Bond'),
+         (5, '^FVX', 'Bond'),
+         (6, '^TNX', 'Bond'),
+         (7, 'EURUSD=X', 'Cash'),
+         (8, 'JPY=X', 'Cash'),
+         (9, 'GBPUSD=X', 'Cash')]
+
+sql4 = "INSERT INTO Holdings VALUES(%s,%s,%s,%s,%s)"
+data4 = [(1, 1, 'Fridah', 1, 177.95),
+         (2, 2, 'Fridah', 1, 20.27),
+         (3, 3, 'Fridah', 1, 174.10),
+         (4, 4, 'Fridah', 1, 4.1500),
+         (5, 5, 'Fridah', 1, 3.7570),
+         (6, 6, 'Fridah', 1, 4.1980),
+         (7, 7, 'Fridah', 1, 1.1577),
+         (8, 8, 'Fridah', 1, 147.4020),
+         (9, 9, 'Fridah', 1, 1.3305)]
+
+try:
+    for row in data:
+        mycursor.execute(sql,row)
+    for row in data2:
+        mycursor.execute(sql2,row)
+    for row in data3:
+        mycursor.execute(sql3,row)
+    for row in data4:
+        mycursor.execute(sql4,row)
+    #mycursor.execute(sql2,data2)
+    mydb.commit()
+except Exception as e:
+    print(f"Failed to insert data {e}")
+    exit(4)
 
 mydb.close()
