@@ -107,7 +107,6 @@ try:
         mycursor.execute(sql3,row)
     for row in data4:
         mycursor.execute(sql4,row)
-    #mycursor.execute(sql2,data2)
     mydb.commit()
 except Exception as e:
     print(f"Failed to insert data {e}")
