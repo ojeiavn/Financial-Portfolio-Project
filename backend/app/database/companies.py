@@ -20,7 +20,7 @@ def get_companies():
     return jsonify(companies)
     
 # GET a single company by ID
-@app.route('/companies/<string:symbol>', methods=['GET'])
+@app.route('/companies/<symbol>', methods=['GET'])
 def get_company(symbol):
     try:
         cursor = mydb.cursor(dictionary=True)
@@ -33,7 +33,7 @@ def get_company(symbol):
     return jsonify(company)
 
 # DELETE holding by ID
-@app.route('/holdings/<string:symbol>', methods=['DELETE'])
+@app.route('/holdings/<symbol>', methods=['DELETE'])
 def delete_holding(symbol):
     try:
         cursor = mydb.cursor(dictionary=True)

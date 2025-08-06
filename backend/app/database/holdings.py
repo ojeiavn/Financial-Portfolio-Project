@@ -38,13 +38,13 @@ def get_holding(holding_id):
 def add_holding():
     data = request.get_json()
     username = data.get('username')
-    product_id = data.get('product_id')
+    symbol = data.get('symbol')
     quantity = data.get('quantity')
     price = data.get('price')
 
     # Validate inputs
-    if not all([username, product_id, quantity, price]):
-        return jsonify({'error': 'username, product_id, quantity, and price are required'}), 400
+    if not all([username, symbol, quantity, price]):
+        return jsonify({'error': 'username, symbol, quantity, and price are required'}), 400
     try:
         quantity = float(quantity)
         price = float(price)
@@ -57,20 +57,20 @@ def add_holding():
         cursor = conn.cursor()
 
         # Check if user exists
-        cursor.execute('SELECT Username FROM Users WHERE Username = %s', (username,))
+        cursor.execute('SELECT Username FROM Users WHERE Username = %s', (username))
         if not cursor.fetchone():
             return jsonify({'error': 'User not found'}), 404
 
         # Check if product exists
-        cursor.execute('SELECT Id FROM Products WHERE Id = %s', (product_id,))
+        cursor.execute('SELECT Symbol FROM Products WHERE Symbol = %s', (symbol))
         if not cursor.fetchone():
             return jsonify({'error': 'Product not found'}), 404
 
         # Insert new holding
         cursor.execute('''
-            INSERT INTO Holdings (Username, ProductId, Quantity, Price)
+            INSERT INTO Holdings (Username, Symbol, Quantity, Price)
             VALUES (%s, %s, %s, %s)
-        ''', (username, product_id, quantity, price))
+        ''', (username, symbol, quantity, price))
         conn.commit()
     except Exception as e:
         return jsonify({'error': 'Failed to add holding', 'details': str(e)}), 500

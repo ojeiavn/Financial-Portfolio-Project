@@ -14,13 +14,6 @@ except Exception as e:
 # DDL to run
 createdb="CREATE DATABASE IF NOT EXISTS Portfolio"
 usedb="USE Portfolio"
-createCompanies="""CREATE TABLE IF NOT EXISTS Companies (
-                Symbol VARCHAR(10) PRIMARY KEY,
-                Name VARCHAR(100) NOT NULL,
-                Country VARCHAR(100),
-                Phone VARCHAR(50),
-                Website VARCHAR(100)
-                );"""
 
 createUsers="""CREATE TABLE IF NOT EXISTS Users (
             Username VARCHAR(100) PRIMARY KEY,
@@ -30,28 +23,36 @@ createUsers="""CREATE TABLE IF NOT EXISTS Users (
             );"""
 
 createProducts="""CREATE TABLE IF NOT EXISTS Products (
-                Id INT AUTO_INCREMENT PRIMARY KEY,
-                Symbol VARCHAR(10) NOT NULL,
-                Type ENUM('Stock', 'Bond', 'Cash') NOT NULL,
-                CONSTRAINT FK_Symbol
-                    FOREIGN KEY (Symbol) REFERENCES Companies(Symbol)
-                    ON DELETE SET CASCADE
+                Symbol VARCHAR(10) PRIMARY KEY,
+                Name VARCHAR(100) NOT NULL,
+                Type ENUM('Stock', 'Bond', 'Cash') NOT NULL
                 );"""
+                
+createCompanies="""CREATE TABLE IF NOT EXISTS Companies (
+                Symbol VARCHAR(10) PRIMARY KEY,
+                Country VARCHAR(100),
+                Phone VARCHAR(50),
+                Website VARCHAR(100),
+                CONSTRAINT FK_Symbol
+                    FOREIGN KEY (Symbol) REFERENCES Products(Symbol)
+                    ON DELETE CASCADE
+                );"""
+
 createHoldings="""CREATE TABLE IF NOT EXISTS Holdings (
                 HoldingId INT AUTO_INCREMENT PRIMARY KEY,
                 Username VARCHAR(100) NOT NULL,
-                ProductId INT NOT NULL,
+                Symbol VARCHAR(10) NOT NULL,
                 Quantity DECIMAL(10, 2) NOT NULL,
                 Price DECIMAL(10, 2) NOT NULL,
                 CONSTRAINT FK_User
                     FOREIGN KEY (Username) REFERENCES Users(Username)
                     ON DELETE CASCADE,
                 CONSTRAINT FK_Product
-                    FOREIGN KEY (ProductId) REFERENCES Products(Id)
+                    FOREIGN KEY (Symbol) REFERENCES Products(Symbol)
                     ON DELETE CASCADE
                 );"""
 
-actions=[createdb, usedb, createCompanies, createUsers, createProducts, createHoldings]
+actions=[createdb, usedb, createUsers, createProducts, createCompanies, createHoldings]
 
 # Create the database DDL
 try:
@@ -71,32 +72,32 @@ data = [('Fridah','Fridah','Fridah@email.com','+1 123 456 7890'),
         ('Sreya','Sreya Ramachandran','Sreya@email.com','+1 123 456 7893'),
         ('Viktor','Viktor Volgyi','Viktor@email.com','+1 123 456 7894')]
 
-sql2 = "INSERT INTO Companies VALUES(%s,%s,%s,%s,%s)"
-data2 = [('NVDA', 'NVIDIA Corporation', 'United States', '408 486 2000', 'https://www.nvidia.com'),
-         ('INTC', 'Intel Corporation', 'United States', '408 765 8080', 'https://www.intel.com'),
-         ('AMD', 'Advanced Micro Devices, Inc.', 'United States', '408 749 4000', 'https://www.amd.com')]
+sql2 = "INSERT INTO Products VALUES(%s,%s,%s)"
+data2 = [('NVDA', 'NVIDIA Corporation', 'Stock'),
+         ('INTC', 'Intel Corporation', 'Stock'),
+         ('AMD', 'Advanced Micro Devices, Inc.', 'Stock'),
+         ('^IRX', '13 WEEK TREASURY BILL', 'Bond'),
+         ('^FVX', 'Treasury Yield 5 Years', 'Bond'),
+         ('^TNX', 'CBOE Interest Rate 10 Year T No', 'Bond'),
+         ('EURUSD=X', 'EUR/USD', 'Cash'),
+         ('JPY=X', 'USD/JPY', 'Cash'),
+         ('GBPUSD=X', 'GBP/USD', 'Cash')]
 
-sql3 = "INSERT INTO Products VALUES(%s,%s,%s)"
-data3 = [(1, 'NVDA', 'Stock'),
-         (2, 'INTC', 'Stock'),
-         (3, 'AMD', 'Stock'),
-         (4, '^IRX', 'Bond'),
-         (5, '^FVX', 'Bond'),
-         (6, '^TNX', 'Bond'),
-         (7, 'EURUSD=X', 'Cash'),
-         (8, 'JPY=X', 'Cash'),
-         (9, 'GBPUSD=X', 'Cash')]
+sql3 = "INSERT INTO Companies VALUES(%s,%s,%s,%s)"
+data3 = [('NVDA', 'United States', '408 486 2000', 'https://www.nvidia.com'),
+         ('INTC', 'United States', '408 765 8080', 'https://www.intel.com'),
+         ('AMD', 'United States', '408 749 4000', 'https://www.amd.com')]
 
 sql4 = "INSERT INTO Holdings VALUES(%s,%s,%s,%s,%s)"
-data4 = [(1, 1, 'Fridah', 1, 177.95),
-         (2, 2, 'Fridah', 1, 20.27),
-         (3, 3, 'Fridah', 1, 174.10),
-         (4, 4, 'Fridah', 1, 4.1500),
-         (5, 5, 'Fridah', 1, 3.7570),
-         (6, 6, 'Fridah', 1, 4.1980),
-         (7, 7, 'Fridah', 1, 1.1577),
-         (8, 8, 'Fridah', 1, 147.4020),
-         (9, 9, 'Fridah', 1, 1.3305)]
+data4 = [(1, 'Fridah', 'NVDA', 1, 177.95),
+         (2, 'Fridah', 'INTC', 1, 20.27),
+         (3, 'Fridah', 'AMD', 1, 174.10),
+         (4, 'Fridah', '^IRX', 1, 4.1500),
+         (5, 'Fridah', '^FVX', 1, 3.7570),
+         (6, 'Fridah', '^TNX', 1, 4.1980),
+         (7, 'Fridah', 'EURUSD=X', 1, 1.1577),
+         (8, 'Fridah', 'JPY=X', 1, 147.4020),
+         (9, 'Fridah', 'GBPUSD=X', 1, 1.3305)]
 
 try:
     for row in data:

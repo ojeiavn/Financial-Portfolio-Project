@@ -12,10 +12,10 @@ def get_products():
     return jsonify(products)
 
 # GET single product by ID
-@app.route('/products/<int:product_id>', methods=['GET'])
-def get_product(product_id):
+@app.route('/products/<symbol>', methods=['GET'])
+def get_product(symbol):
     cursor = conn.cursor(dictionary=True)
-    cursor.execute('SELECT * FROM Products WHERE Id = %s', (product_id,))
+    cursor.execute('SELECT * FROM Products WHERE Symbol = %s', (symbol))
     product = cursor.fetchone()
     cursor.close()
     if product:
@@ -27,7 +27,8 @@ def get_product(product_id):
 @app.route('/products', methods=['POST'])
 def add_product():
     data = request.get_json()
-    symbol = data.get('symbol')  # company symbol FK
+    symbol = data.get('symbol')  # company symbol PK
+    name = data.get('name')  # company name
     type_ = data.get('type')
 
     if not symbol or not type_:
@@ -35,16 +36,10 @@ def add_product():
     
     cursor = conn.cursor()
 
-    # Validate symbol exists in Companies
-    cursor.execute('SELECT Symbol FROM Companies WHERE Symbol = %s', (symbol,))
-    if cursor.fetchone() is None:
-        cursor.close()
-        return jsonify({'error': 'Invalid symbol: does not exist in Companies'}), 400
-
     try:
         cursor.execute(
-            'INSERT INTO Products (Symbol, Type) VALUES (%s, %s)',
-            (symbol, type_)
+            'INSERT INTO Products (Symbol, Type) VALUES (%s, %s, %s)',
+            (symbol, name, type_)
         )
         conn.commit()
     except Exception as e:
@@ -55,47 +50,41 @@ def add_product():
     return jsonify({'message': 'Product added successfully'}), 201
 
 # PUT update product
-@app.route('/products/<int:product_id>', methods=['PUT'])
-def update_product(product_id):
+@app.route('/products/<symbol', methods=['PUT'])
+def update_product(symbol):
     data = request.get_json()
-    symbol = data.get('symbol')
-    type_ = data.get('type')
+    name = data.get('name')
+    type = data.get('type')
 
-    if not symbol or not type_:
-        return jsonify({'error': 'Symbol and type are required'}), 400
+    if not name or not type:
+        return jsonify({'error': 'Name and type are required'}), 400
 
     cursor = conn.cursor()
 
-    cursor.execute('SELECT * FROM Products WHERE Id = %s', (product_id,))
+    cursor.execute('SELECT * FROM Products WHERE Symbol = %s', (symbol))
     if cursor.fetchone() is None:
         cursor.close()
         return jsonify({'error': 'Product not found'}), 404
 
-    # Validate symbol exists in Companies
-    cursor.execute('SELECT Symbol FROM Companies WHERE Symbol = %s', (symbol,))
-    if cursor.fetchone() is None:
-        cursor.close()
-        return jsonify({'error': 'Invalid symbol: does not exist in Companies'}), 400
-
     cursor.execute(
-        'UPDATE Products SET Symbol = %s, Type = %s WHERE Id = %s',
-        (symbol, type_, product_id)
+        'UPDATE Products SET Name = %s, Type = %s WHERE Symbol = %s',
+        (name, type, symbol)
     )
     conn.commit()
     cursor.close()
     return jsonify({'message': 'Product updated successfully'})
 
 # DELETE product
-@app.route('/products/<int:product_id>', methods=['DELETE'])
-def delete_product(product_id):
+@app.route('/products/<symbol>', methods=['DELETE'])
+def delete_product(symbol):
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM Products WHERE Id = %s', (product_id,))
+    cursor.execute('SELECT * FROM Products WHERE Symbol = %s', (symbol))
     if cursor.fetchone() is None:
         cursor.close()
         return jsonify({'error': 'Product not found'}), 404
 
-    cursor.execute('DELETE FROM Products WHERE Id = %s', (product_id,))
+    cursor.execute('DELETE FROM Products WHERE Symbol = %s', (symbol))
     conn.commit()
     cursor.close()
     return jsonify({'message': 'Product deleted successfully'})
