@@ -1,12 +1,13 @@
 import { useState } from 'react'
+import UserPortfolio from "./components/UserPortfolio"
 import './App.css'
 
 function App() {
 
   return (
-    <>
-    <div class="text-3xl text-blue-400">hello world from react</div>
-    </>
+    <div>
+      <UserPortfolio />
+    </div>
   )
 }
 
