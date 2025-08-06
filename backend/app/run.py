@@ -17,27 +17,6 @@ def dbconn():
         print(mydb)
     except Exception as e:
         print(f"Error connecting to database {e}")
-        
-class CompanyList(Resource):
-    # Adding the default get method
-    def get(self):
-        mycursor = mydb.cursor(dictionary=True)
-        mycursor.execute("SELECT * FROM Companies")
-        companies = mycursor.fetchall()
-        mycursor.close()
-        return jsonify(companies)
-    
-class Company(Resource):
-    # Adding the default get method
-    def get(self, symbol):
-        mycursor = mydb.cursor(dictionary=True)
-        mycursor.execute(f"SELECT * FROM Companies where Symbol={symbol}")
-        companies = mycursor.fetchall()
-        mycursor.close()
-        return jsonify(companies)
-    
-api.add_resource(CompanyList, '/api/companylist')
-api.add_resource(Company, '/api/company/<symbol>')
 
 if __name__ == "__main__":
     dbconn()
