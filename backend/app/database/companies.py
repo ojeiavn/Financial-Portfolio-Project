@@ -1,22 +1,10 @@
 from flask import Flask, jsonify
 from flask_restful import Resource, Api
 import mysql.connector
+from run import mydb
 
 app = Flask("api")
 api = Api(app)
-
-def dbconn():
-    try: 
-        global mydb
-        mydb = mysql.connector.connect(
-            host = "localhost",
-            user = "root",
-            password = "n3u3da!",
-            database = "Portfolio"
-        )
-        print(mydb)
-    except Exception as e:
-        print(f"Error connecting to database {e}")
         
 # GET all companies
 @app.route('/companies', methods=['GET'])

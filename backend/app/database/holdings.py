@@ -1,12 +1,12 @@
 from flask import request, jsonify
 from database_flask_connection import app, get_db_connection
 import mysql.connector
+from run import mydb as conn
 
 # GET all holdings
 @app.route('/holdings', methods=['GET'])
 def get_holdings():
     try:
-        conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute('SELECT * FROM Holdings')
         holdings = cursor.fetchall()
@@ -14,7 +14,6 @@ def get_holdings():
         return jsonify({'error': 'Failed to fetch holdings', 'details': str(e)}), 500
     finally:
         cursor.close()
-        conn.close()
     return jsonify(holdings)
 
 
@@ -22,7 +21,6 @@ def get_holdings():
 @app.route('/holdings/<int:holding_id>', methods=['GET'])
 def get_holding(holding_id):
     try:
-        conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute('SELECT * FROM Holdings WHERE HoldingId = %s', (holding_id,))
         holding = cursor.fetchone()
@@ -32,7 +30,6 @@ def get_holding(holding_id):
         return jsonify({'error': 'Failed to fetch holding', 'details': str(e)}), 500
     finally:
         cursor.close()
-        conn.close()
     return jsonify(holding)
 
 
@@ -57,7 +54,6 @@ def add_holding():
         return jsonify({'error': 'Quantity and price must be numbers'}), 400
 
     try:
-        conn = get_db_connection()
         cursor = conn.cursor()
 
         # Check if user exists
@@ -80,7 +76,6 @@ def add_holding():
         return jsonify({'error': 'Failed to add holding', 'details': str(e)}), 500
     finally:
         cursor.close()
-        conn.close()
 
     return jsonify({'message': 'Holding added successfully'}), 201
 
@@ -104,7 +99,6 @@ def update_holding(holding_id):
         return jsonify({'error': 'Quantity and price must be numbers'}), 400
 
     try:
-        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('UPDATE Holdings SET Quantity = %s, Price = %s WHERE HoldingId = %s',
                        (quantity, price, holding_id))
@@ -116,7 +110,6 @@ def update_holding(holding_id):
         return jsonify({'error': 'Failed to update holding', 'details': str(e)}), 500
     finally:
         cursor.close()
-        conn.close()
 
     return jsonify({'message': 'Holding updated successfully'})
 
@@ -125,7 +118,6 @@ def update_holding(holding_id):
 @app.route('/holdings/<int:holding_id>', methods=['DELETE'])
 def delete_holding(holding_id):
     try:
-        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('DELETE FROM Holdings WHERE HoldingId = %s', (holding_id,))
         conn.commit()
@@ -136,6 +128,5 @@ def delete_holding(holding_id):
         return jsonify({'error': 'Failed to delete holding', 'details': str(e)}), 500
     finally:
         cursor.close()
-        conn.close()
 
     return jsonify({'message': 'Holding deleted successfully'})

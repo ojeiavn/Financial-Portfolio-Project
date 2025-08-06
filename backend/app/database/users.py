@@ -1,12 +1,12 @@
 from flask import request, jsonify
 from database_flask_connection import app, get_db_connection
 import mysql.connector
+from run import mydb as conn
 
 # GET all users
 @app.route('/users', methods=['GET'])
 def get_users():
     try:
-        conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         cursor.execute('SELECT * FROM Users')
         users = cursor.fetchall()
@@ -14,7 +14,6 @@ def get_users():
         return jsonify({'error': 'Failed to fetch users', 'details': str(e)}), 500
     finally:
         cursor.close()
-        conn.close()
     return jsonify(users)
 
 
@@ -31,7 +30,6 @@ def add_user():
         return jsonify({'error': 'Username, name, email, and phone are required'}), 400
 
     try:
-        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute(
             'INSERT INTO Users (Username, Name, Email, Phone) VALUES (%s, %s, %s, %s)',
@@ -44,7 +42,6 @@ def add_user():
         return jsonify({'error': 'Failed to add user', 'details': str(e)}), 500
     finally:
         cursor.close()
-        conn.close()
 
     return jsonify({'message': 'User added successfully'}), 201
 
@@ -61,7 +58,6 @@ def update_user(username):
         return jsonify({'error': 'Name, email, and phone are required'}), 400
 
     try:
-        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute(
             'UPDATE Users SET Name = %s, Email = %s, Phone = %s WHERE Username = %s',
@@ -78,7 +74,6 @@ def update_user(username):
         return jsonify({'error': 'Failed to update user', 'details': str(e)}), 500
     finally:
         cursor.close()
-        conn.close()
 
     return jsonify({'message': 'User updated successfully'})
 
@@ -87,7 +82,6 @@ def update_user(username):
 @app.route('/users/<string:username>', methods=['DELETE'])
 def delete_user(username):
     try:
-        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('DELETE FROM Users WHERE Username = %s', (username,))
         conn.commit()
@@ -99,6 +93,5 @@ def delete_user(username):
         return jsonify({'error': 'Failed to delete user', 'details': str(e)}), 500
     finally:
         cursor.close()
-        conn.close()
 
     return jsonify({'message': 'User deleted successfully'})

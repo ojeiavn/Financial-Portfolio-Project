@@ -1,26 +1,23 @@
 from flask import request, jsonify
 from database_flask_connection import app, get_db_connection
+from run import mydb as conn
 
 # GET all products
 @app.route('/products', methods=['GET'])
 def get_products():
-    conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
     cursor.execute('SELECT * FROM Products')
     products = cursor.fetchall()
     cursor.close()
-    conn.close()
     return jsonify(products)
 
 # GET single product by ID
 @app.route('/products/<int:product_id>', methods=['GET'])
 def get_product(product_id):
-    conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
     cursor.execute('SELECT * FROM Products WHERE Id = %s', (product_id,))
     product = cursor.fetchone()
     cursor.close()
-    conn.close()
     if product:
         return jsonify(product)
     else:
@@ -35,15 +32,13 @@ def add_product():
 
     if not symbol or not type_:
         return jsonify({'error': 'Symbol and type are required'}), 400
-
-    conn = get_db_connection()
+    
     cursor = conn.cursor()
 
     # Validate symbol exists in Companies
     cursor.execute('SELECT Symbol FROM Companies WHERE Symbol = %s', (symbol,))
     if cursor.fetchone() is None:
         cursor.close()
-        conn.close()
         return jsonify({'error': 'Invalid symbol: does not exist in Companies'}), 400
 
     try:
@@ -54,11 +49,9 @@ def add_product():
         conn.commit()
     except Exception as e:
         cursor.close()
-        conn.close()
         return jsonify({'error': str(e)}), 400
 
     cursor.close()
-    conn.close()
     return jsonify({'message': 'Product added successfully'}), 201
 
 # PUT update product
@@ -71,20 +64,17 @@ def update_product(product_id):
     if not symbol or not type_:
         return jsonify({'error': 'Symbol and type are required'}), 400
 
-    conn = get_db_connection()
     cursor = conn.cursor()
 
     cursor.execute('SELECT * FROM Products WHERE Id = %s', (product_id,))
     if cursor.fetchone() is None:
         cursor.close()
-        conn.close()
         return jsonify({'error': 'Product not found'}), 404
 
     # Validate symbol exists in Companies
     cursor.execute('SELECT Symbol FROM Companies WHERE Symbol = %s', (symbol,))
     if cursor.fetchone() is None:
         cursor.close()
-        conn.close()
         return jsonify({'error': 'Invalid symbol: does not exist in Companies'}), 400
 
     cursor.execute(
@@ -93,7 +83,6 @@ def update_product(product_id):
     )
     conn.commit()
     cursor.close()
-    conn.close()
     return jsonify({'message': 'Product updated successfully'})
 
 # DELETE product
@@ -104,11 +93,9 @@ def delete_product(product_id):
     cursor.execute('SELECT * FROM Products WHERE Id = %s', (product_id,))
     if cursor.fetchone() is None:
         cursor.close()
-        conn.close()
         return jsonify({'error': 'Product not found'}), 404
 
     cursor.execute('DELETE FROM Products WHERE Id = %s', (product_id,))
     conn.commit()
     cursor.close()
-    conn.close()
     return jsonify({'message': 'Product deleted successfully'})
