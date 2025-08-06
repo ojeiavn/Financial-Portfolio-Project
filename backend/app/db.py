@@ -35,7 +35,7 @@ createProducts="""CREATE TABLE IF NOT EXISTS Products (
                 Type ENUM('Stock', 'Bond', 'Cash') NOT NULL,
                 CONSTRAINT FK_Symbol
                     FOREIGN KEY (Symbol) REFERENCES Companies(Symbol)
-                    ON DELETE SET NULL
+                    ON DELETE SET CASCADE
                 );"""
 createHoldings="""CREATE TABLE IF NOT EXISTS Holdings (
                 HoldingId INT AUTO_INCREMENT PRIMARY KEY,
