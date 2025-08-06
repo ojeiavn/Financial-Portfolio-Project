@@ -1,39 +1,54 @@
 <!DOCTYPE html>
-<html lang = "en">
-    <head>
-        <title>VISO Portfolio</title>
-        <link rel="stylesheet" href="..\src\styles\styles.css" />
-    </head>
-        <body>
-            <header>
-                <h1>Financial Portfolio</h1> 
-            </header>
+<html lang="en">
+<head>
+  <title>VISO Portfolio</title>
+  <link rel="stylesheet" href="../src/styles/styles.css" />
+</head>
 
-            <div class="finance-card-left" >
+<body>
+  <header>
+    <h1>Financial Portfolio</h1> 
+  </header>
 
-                <div id="sbc-title">
-                    <h2>Products</h4>
-                </div>
+  <!-- === Dashboard Layout Container === -->
+  <div class="dashboard">
 
-                <div id="sbc-buttons">
-                    <form>
-                        <button type="submit" formaction="">Stocks</button>
-                        <button type="submit" formaction="">Bonds</button>
-                        <button type="submit" formaction="">Cash</button>
-                    </form>    
-                </div>
+    <!-- === Left Panel: Product Selection === -->
+    <div class="left-panel finance-card">
 
-                <div id = "products">
-                <div class="card">
-                    <div class="company-name">APPLE</div>
-                </div>
-                <div class="card">
-                    <div class="company-name">META</div>
-                </div>
-                <div class="card">
-                    <div class="company-name">NETFLIX</div>
-                </div>
-            </div> 
-            
-        </body>
+      <!-- Product Heading -->
+      <div id="sbc-title">
+        <h2 id="prod-heading">Products</h2>
+      </div>
+
+      <!-- Stock/Bond/Cash Buttons -->
+      <div id="sbc-buttons">
+        <form>
+          <button type="submit" formaction="">Stocks</button>
+          <button type="submit" formaction="">Bonds</button>
+          <button type="submit" formaction="">Cash</button>
+        </form>    
+      </div>
+
+      <!-- Product Company Cards -->
+      <div id="products">
+        <div class="card">
+          <div class="company-name">APPLE</div>
+        </div>
+        <div class="card">
+          <div class="company-name">META</div>
+        </div>
+        <div class="card">
+          <div class="company-name">NETFLIX</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- === Placeholder: You may add center-panel and right-panel later === -->
+    <div class="center-panel finance-card"></div>
+    <div class="right-panel finance-card"></div>
+
+  </div>
+</body>
 </html>

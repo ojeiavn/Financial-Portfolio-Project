@@ -1,48 +1,173 @@
+/* ========== ROOT VARIABLES ========== */
 :root {
-  --bg-light: #48376C;     /* Lightest - used for background */
-  --bg-mid: #3B305A;       /* Medium - used for product cards */
-  --bg-dark: #2C2343;      /* Darkest - used for finance cards */
+  --bg-light: #48376C;     /* Lightest - background */
+  --bg-mid: #3B305A;       /* Product cards */
+  --bg-dark: #2C2343;      /* Finance cards and right panel */
+  --accent-green: #09721b;
+
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 2rem;
+
+  --font-main: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+  --border-default: 1px solid white;
+  --radius-md: 8px;
 }
 
-h1 {
-  text-align: center;
-}
-
+/* ========== BASE ========== */
 body {
   background-color: var(--bg-light);
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: var(--font-main);
   color: white;
+  margin: 0;
+  padding: var(--space-md);
 }
 
-/* Darkest cards for finance section (right-hand market stats) */
-.finance-card-left {
-  background-color: var(--bg-dark);
-  width: 30%;
-  border: 1px solid white;
-  padding: 1rem;
-  border-radius: 8px;
-  float: left;
+h1, h2, h3 {
+  text-align: center;
+  margin-bottom: var(--space-sm);
 }
 
-.finance-card-right {
-  background-color: var(--bg-dark);
-  width: 30%;
-  border: 1px solid white;
-  padding: 1rem;
-  border-radius: 8px;
+/* ========== LAYOUT ========== */
+.dashboard {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
 }
 
-/* Mid-tone cards for product listings (left-hand APPLE, META, etc.) */
+.left-panel,
+.center-panel,
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.left-panel {
+  width: 25%;
+  min-width: 280px;
+}
+
+.center-panel {
+  width: 50%;
+  min-width: 400px;
+  align-items: center;
+}
+
+.right-panel {
+  width: 25%;
+  min-width: 280px;
+}
+
+/* ========== CARDS ========== */
+
+/* Product cards (APPLE, META, etc.) */
 .card {
   background-color: var(--bg-mid);
-  padding: 1rem;
-  border-radius: 8px;
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+/* Finance/Right-side stat cards */
+.finance-card {
+  background-color: var(--bg-dark);
+  border: var(--border-default);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+
+/* ========== PRODUCT SECTION ========== */
+#prod-heading {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
 .company-name {
-    text-align: right;
+  text-align: right;
 }
 
-#sbc-title {
-    text-align: center;
+/* Stock/Bond/Cash Button Group */
+#sbc-buttons {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+#sbc-buttons button {
+  background-color: var(--bg-dark);
+  color: white;
+  padding: var(--space-sm) var(--space-md);
+  border: var(--border-default);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#sbc-buttons button:hover {
+  background-color: var(--accent-green);
+}
+
+
+/* ========== GRAPHICS AREA ========== */
+.graph-box {
+  background-color: var(--bg-dark);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.graph-label {
+  background-color: var(--accent-green);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+
+/* ========== TICKER / NEWS ========== */
+.news-ticker {
+  background-color: var(--bg-dark);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+
+/* ========== FOOTER OR MISC ========== */
+.my-portfolio-button {
+  background-color: var(--bg-dark);
+  color: white;
+  border: var(--border-default);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  text-align: center;
+  margin-top: var(--space-md);
+  cursor: pointer;
+}
+
+.my-portfolio-button:hover {
+  background-color: var(--accent-green);
 }
