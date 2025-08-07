@@ -1,16 +1,12 @@
-from flask import Flask, jsonify
-from flask_restful import Resource, Api
-import mysql.connector
-from run import mydb
-
-app = Flask("api")
-api = Api(app)
+from flask import request, jsonify
+from database.db import conn
+from database.db import app
         
 # GET all companies
 @app.route('/companies', methods=['GET'])
 def get_companies():
     try:
-        cursor = mydb.cursor(dictionary=True)
+        cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM Companies")
         companies = cursor.fetchall()
     except Exception as e:
@@ -19,12 +15,12 @@ def get_companies():
         cursor.close()
     return jsonify(companies)
     
-# GET a single company by ID
+# GET a single company by symbol
 @app.route('/companies/<symbol>', methods=['GET'])
 def get_company(symbol):
     try:
-        cursor = mydb.cursor(dictionary=True)
-        cursor.execute(f"SELECT * FROM Companies where Symbol={symbol}")
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM Companies WHERE Symbol=%s", (symbol,))
         company = cursor.fetchone()
     except Exception as e:
         return jsonify({'error': 'Failed to fetch company', 'details': str(e)}), 500
@@ -32,13 +28,13 @@ def get_company(symbol):
         cursor.close()
     return jsonify(company)
 
-# DELETE holding by ID
-@app.route('/holdings/<symbol>', methods=['DELETE'])
-def delete_holding(symbol):
+# DELETE comapny by symbol
+@app.route('/companies/<symbol>', methods=['DELETE'])
+def delete_company(symbol):
     try:
-        cursor = mydb.cursor(dictionary=True)
-        cursor.execute('DELETE FROM Companies WHERE Symbol = %s', (symbol))
-        mydb.commit()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('DELETE FROM Companies WHERE Symbol = %s', (symbol,))
+        conn.commit()
 
         if cursor.rowcount == 0:
             return jsonify({'error': 'Company not found'}), 404
@@ -48,13 +44,3 @@ def delete_holding(symbol):
         cursor.close()
 
     return jsonify({'message': 'Company deleted successfully'})
-
-if __name__ == "__main__":
-    dbconn()
-    try:
-        app.run(debug=True, host="0.0.0.0")
-    except Exception as e:
-        print(f"Error: {e}")
-    finally:
-        # Close the database connection when the application terminates
-        mydb.close()

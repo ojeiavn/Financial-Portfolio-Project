@@ -1,7 +1,7 @@
 from flask import request, jsonify
-from database_flask_connection import app, get_db_connection
 import mysql.connector
-from run import mydb as conn
+from database.db import conn
+from database.db import app
 
 # GET all users
 @app.route('/users', methods=['GET'])

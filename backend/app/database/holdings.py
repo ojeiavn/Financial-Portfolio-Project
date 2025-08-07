@@ -1,7 +1,7 @@
 from flask import request, jsonify
-from database_flask_connection import app, get_db_connection
-import mysql.connector
-from run import mydb as conn
+from database.db import conn
+from database.db import app
+import yfinance
 
 # GET all holdings
 @app.route('/holdings', methods=['GET'])
@@ -57,14 +57,40 @@ def add_holding():
         cursor = conn.cursor()
 
         # Check if user exists
-        cursor.execute('SELECT Username FROM Users WHERE Username = %s', (username))
+        cursor.execute('SELECT Username FROM Users WHERE Username = %s', (username,))
         if not cursor.fetchone():
             return jsonify({'error': 'User not found'}), 404
 
         # Check if product exists
-        cursor.execute('SELECT Symbol FROM Products WHERE Symbol = %s', (symbol))
+        cursor.execute('SELECT Symbol FROM Products WHERE Symbol = %s', (symbol,))
         if not cursor.fetchone():
-            return jsonify({'error': 'Product not found'}), 404
+            try:
+                productInfo=yfinance.Ticker(symbol).info
+                
+                if("longName" not in productInfo):
+                    return jsonify({'error': 'Symbol not found'}), 404
+                
+                type="Bond"
+                name=productInfo.get("longName")
+                
+                if(symbol[0]!='^'):
+                    if("city" in productInfo):
+                        type="Stock"
+                        cursor.execute(
+                            'INSERT INTO Companies (Symbol, Country, Phone, Website) VALUES (%s, %s, %s, %s)',
+                            (symbol, productInfo.get("country"), productInfo.get("phone"), productInfo.get("website"))
+                        )
+                    else:
+                        type="Cash"
+                        
+                cursor.execute(
+                    'INSERT INTO Products (Symbol, Name, Type) VALUES (%s, %s, %s)',
+                    (symbol, name, type)
+                )
+                conn.commit()
+            except Exception as e:
+                cursor.close()
+                return jsonify({'error': str(e)}), 400
 
         # Insert new holding
         cursor.execute('''

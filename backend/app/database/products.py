@@ -1,6 +1,6 @@
 from flask import request, jsonify
-from database_flask_connection import app, get_db_connection
-from run import mydb as conn
+from database.db import conn
+from database.db import app
 
 # GET all products
 @app.route('/products', methods=['GET'])
@@ -15,7 +15,7 @@ def get_products():
 @app.route('/products/<symbol>', methods=['GET'])
 def get_product(symbol):
     cursor = conn.cursor(dictionary=True)
-    cursor.execute('SELECT * FROM Products WHERE Symbol = %s', (symbol))
+    cursor.execute('SELECT * FROM Products WHERE Symbol = %s', (symbol,))
     product = cursor.fetchone()
     cursor.close()
     if product:
@@ -29,17 +29,17 @@ def add_product():
     data = request.get_json()
     symbol = data.get('symbol')  # company symbol PK
     name = data.get('name')  # company name
-    type_ = data.get('type')
+    type = data.get('type')
 
-    if not symbol or not type_:
-        return jsonify({'error': 'Symbol and type are required'}), 400
+    if not symbol or not type or not name:
+        return jsonify({'error': 'Symbol, type and name are required'}), 400
     
     cursor = conn.cursor()
 
     try:
         cursor.execute(
-            'INSERT INTO Products (Symbol, Type) VALUES (%s, %s, %s)',
-            (symbol, name, type_)
+            'INSERT INTO Products (Symbol, Name, Type) VALUES (%s, %s, %s)',
+            (symbol, name, type)
         )
         conn.commit()
     except Exception as e:
@@ -50,7 +50,7 @@ def add_product():
     return jsonify({'message': 'Product added successfully'}), 201
 
 # PUT update product
-@app.route('/products/<symbol', methods=['PUT'])
+@app.route('/products/<symbol>', methods=['PUT'])
 def update_product(symbol):
     data = request.get_json()
     name = data.get('name')
@@ -61,7 +61,7 @@ def update_product(symbol):
 
     cursor = conn.cursor()
 
-    cursor.execute('SELECT * FROM Products WHERE Symbol = %s', (symbol))
+    cursor.execute('SELECT * FROM Products WHERE Symbol = %s', (symbol,))
     if cursor.fetchone() is None:
         cursor.close()
         return jsonify({'error': 'Product not found'}), 404
@@ -77,14 +77,13 @@ def update_product(symbol):
 # DELETE product
 @app.route('/products/<symbol>', methods=['DELETE'])
 def delete_product(symbol):
-    conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT * FROM Products WHERE Symbol = %s', (symbol))
+    cursor.execute('SELECT * FROM Products WHERE Symbol = %s', (symbol,))
     if cursor.fetchone() is None:
         cursor.close()
         return jsonify({'error': 'Product not found'}), 404
 
-    cursor.execute('DELETE FROM Products WHERE Symbol = %s', (symbol))
+    cursor.execute('DELETE FROM Products WHERE Symbol = %s', (symbol,))
     conn.commit()
     cursor.close()
     return jsonify({'message': 'Product deleted successfully'})
