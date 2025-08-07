@@ -7,6 +7,7 @@ from database import companies
 from database import holdings
 from database import products
 from database import users
+from database import finance
 
 if __name__ == "__main__":
     db.dbconn()

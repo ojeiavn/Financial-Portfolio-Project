@@ -14,6 +14,8 @@ def get_holdings():
         return jsonify({'error': 'Failed to fetch holdings', 'details': str(e)}), 500
     finally:
         cursor.close()
+    for holding in holdings:
+        holding["CurrentPrice"]=yfinance.Ticker(holding.get("Symbol")).fast_info.last_price
     return jsonify(holdings)
 
 
