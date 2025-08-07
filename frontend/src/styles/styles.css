@@ -36,6 +36,11 @@
   color: var(--accent-green);
 }
 
+.sellBtn.bg-bg-light:hover {
+  background-color: #09721b;
+}
+
+
 /* Padding/Spacing */
 .p-xs {
   padding: var(--space-xs);
