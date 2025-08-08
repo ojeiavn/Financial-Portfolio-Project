@@ -65,7 +65,7 @@ def get_prices():
         result["CurrentPrice"]=yfinance.Ticker(result.get("Symbol")).fast_info.last_price*float(result.get("Quantity"))
     return jsonify(results)
 
-# GET quantity, total price and current price summary grouped by symbol
+# GET total price and current price summary
 @app.route('/allprices', methods=['GET'])
 def get_allprices():
     try:
@@ -98,11 +98,3 @@ def get_allprices():
         AllPrices["Prices"]=AllPrices.get("Prices")+result.get("Price")
         AllPrices["CurrentPrices"]=AllPrices.get("CurrentPrices")+yfinance.Ticker(result.get("Symbol")).fast_info.last_price*float(result.get("Quantity"))
     return jsonify(AllPrices)
-
-
-
-
-
-
-
-

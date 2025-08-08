@@ -11,6 +11,8 @@ from database import finance
 
 if __name__ == "__main__":
     db.dbconn()
+    db.dbcreate()
+    #db.dbdummy()
     try:
         app.run(debug=True, host="0.0.0.0")
     except Exception as e:
