@@ -6,7 +6,7 @@ const UserOtherAssests = () => {
         const [cashdata, setcashdata] = useState([]);
 
         useEffect(() => {
-            fetch("http://172.30.0.198:5000/holdings" || "http://localhost:5000/holdings")
+            fetch("http://172.30.0.198:5000/prices" || "http://localhost:5000/prices")
             .then((res) => {
                 if(!res.ok) {
                     throw new Error("Network reposnse not ok");
@@ -15,10 +15,10 @@ const UserOtherAssests = () => {
             })
             .then((jsondata)=> {
                 jsondata.map((item, idx) => {
-                    console.log(item.type +" - " +idx)
+                    console.log(item.Type +" - " +idx)
                 })
-                const bondsOnly = jsondata.filter((item) => item.type === "Bond");
-                const cashOnly = jsondata.filter((item) => item.type === "Cash")
+                const bondsOnly = jsondata.filter((item) => item.Type === "Bond");
+                const cashOnly = jsondata.filter((item) => item.Type === "Cash")
                 setbonddata(bondsOnly);
                 setcashdata(cashOnly);
             })

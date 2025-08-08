@@ -5,7 +5,7 @@ const UserStocks = () => {
     const [data, setData] = useState([])
     
     useEffect(() => {
-        fetch("http://172.30.0.198:5000/holdings" || "http://localhost:5000/holdings")
+        fetch("http://172.30.0.198:5000/prices" || "http://localhost:5000/prices")
         .then((res) => {
             if(!res.ok) {
                 throw new Error("Network reposnse not ok");
@@ -14,9 +14,9 @@ const UserStocks = () => {
         })
         .then((jsondata)=> {
             jsondata.map((item, idx) => {
-                console.log(item.type +" - " +idx)
+                console.log(item.Type +" - " +idx)
             })
-            const stockOnly = jsondata.filter((item) => item.type === "Stock");
+            const stockOnly = jsondata.filter((item) => item.Type === "Stock");
             setData(stockOnly);
         })
         .catch((err) => {
@@ -35,7 +35,7 @@ const UserStocks = () => {
                                 <span className="p-1 symbol">{item.Symbol}</span>
                                 <div>
                                     <button className="py-1 px-2 mr-1 w-10 bg-bg-light rounded-lg quantity">{item.Quantity}</button>
-                                    <button className="py-1 px-2 ml-1 w-10 bg-bg-light rounded-lg cursor-pointer sellBtn">Sell</button>
+                                    <button className="py-1 px-2 ml-1 w-10 bg-bg-light rounded-lg cursor-pointer sellBtn" >Sell</button>
                                 </div>
                             </div>
                         ))}

@@ -34,10 +34,10 @@ const UserChartsCash = () => {
     });
     
     useEffect(() => {
-        fetch("http://172.30.0.198:5000/holdings" || "http://localhost:5000/holdings")
+        fetch("http://172.30.0.198:5000/prices" || "http://localhost:5000/prices")
         .then((res) =>  res.json())
         .then((jsondata)=> {
-            const cashOnly = jsondata.filter((item) => item.type === "Cash");
+            const cashOnly = jsondata.filter((item) => item.Type === "Cash");
             setState((prev) => ({
                 ...prev,
                 series: cashOnly.map((i) => Number(i.Quantity)),

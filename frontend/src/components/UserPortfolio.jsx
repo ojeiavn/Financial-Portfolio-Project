@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import UserStocks from "./UserStocks";
 import UserOtherAssests from "./UserOtherAssests";
 import UserCharts from "./UserCharts";
@@ -8,6 +8,27 @@ import UserChartsBonds from "./UserChartsBonds";
 import UserChartsCash from "./UserChartsCash";
 
 const UserPortfolio = () => {
+
+    const [data, setData] = useState([])
+        
+        useEffect(() => {
+            fetch("http://172.30.0.198:5000/prices" || "http://localhost:5000/prices")
+            .then((res) => {
+                if(!res.ok) {
+                    throw new Error("Network reposnse not ok");
+                }
+                return res.json();
+            })
+            .then((jsondata)=> {
+                jsondata.map((item, idx) => {
+                    console.log(item.Type +" - " +idx)
+                })
+                setData(jsondata);
+            })
+            .catch((err) => {
+                setMsg("Failed to connect "+err)
+            });
+        }, []);
 
     return (
         <div className="flex flex-col h-screen items-center bg-bg-light p-5 overflow-hidden font-main outerDiv">
@@ -33,6 +54,16 @@ const UserPortfolio = () => {
                 {/* Right side panel */}
                 <UserOtherAssests />
 
+
+
+            </div>
+            <div className="descDiv">
+                {data.map((item, idx) => (
+                    <div>
+                        <span className="desc">{item.Symbol}: </span><span>{item.Name}</span>
+                    </div>
+
+                ))}
             </div>
         </div>
     )

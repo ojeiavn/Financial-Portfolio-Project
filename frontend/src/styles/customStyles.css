@@ -65,8 +65,6 @@
     border-radius: 0.5rem;
     padding: 0.75rem;
     margin: 0.25rem;
-    overflow-y: auto;
-    max-height: 16rem;
 }
 
 .symbol {
@@ -92,3 +90,12 @@
     border: none;
 }
 
+.desc{
+    padding: 0.15rem;
+    font-weight: bold;
+}
+
+.descDiv {
+    display: flex;
+    flex-direction: row;
+}
