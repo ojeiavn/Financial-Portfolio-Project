@@ -48,7 +48,7 @@ const UserChartsBonds = () => {
             }))
         })
         .catch((err) => {
-            setMsg("Failed fetch data:  "+err)
+            console.log("Failed fetch data:  "+err)
         });
     }, []);   
  

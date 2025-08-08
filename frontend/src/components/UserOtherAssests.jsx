@@ -23,7 +23,7 @@ const UserOtherAssests = () => {
                 setcashdata(cashOnly);
             })
             .catch((err) => {
-                setMsg("Failed to connect "+err)
+                console.log("Failed to connect "+err)
             });
         }, []);
 
