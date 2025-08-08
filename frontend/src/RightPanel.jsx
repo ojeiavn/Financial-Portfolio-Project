@@ -1,3 +1,5 @@
+import {Link} from 'react-router';
+
 export function RightPanel() {
   return (
     <div className="right-panel">
@@ -20,7 +22,7 @@ export function RightPanel() {
         <p>0DPO.L1 +12.02 <span style={{ color: "green" }}>(2.56%)</span></p>
         <p>0O4N.L1 +12.02 <span style={{ color: "green" }}>(2.56%)</span></p>
       </div>
-      <div className="my-portfolio-button">My Portfolio</div>
+      <Link to="/my-portfolio" className="my-portfolio-button">My Portfolio</Link>
     </div>
   );
 }

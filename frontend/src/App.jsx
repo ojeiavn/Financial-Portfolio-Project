@@ -10,7 +10,6 @@ function App() {
   return (
     <>
       <Router>
-      <Header />
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/my-portfolio" element={<UserPortfolio />} />
