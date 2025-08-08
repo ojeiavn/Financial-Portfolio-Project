@@ -1,1 +1,0 @@
-# Manual DB Connector (MySQL)
