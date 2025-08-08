@@ -4,10 +4,10 @@ import UserOtherAssests from "./UserOtherAssests";
 import UserCharts from "./UserCharts";
 import LiveClock from "./LiveClock";
 import TestConnection from "./TestConnection";
+import UserChartsBonds from "./UserChartsBonds";
+import UserChartsCash from "./UserChartsCash";
 
 const UserPortfolio = () => {
-
-    // fetch("http://172.30.0.198:5000").then(response => response.json()).then(data=> console.log(data)).catch(e => console.log(e))
 
     return (
         <div className="flex flex-col h-screen items-center bg-bg-light p-5 overflow-hidden font-main">
@@ -26,8 +26,8 @@ const UserPortfolio = () => {
                 {/* Middle panel for graphs */}
                 <div className="flex justify-between items-center">
                     <UserCharts />
-                    <UserCharts />
-                    <UserCharts />
+                    <UserChartsBonds />
+                    <UserChartsCash />
                 </div>
 
                 {/* Right side panel */}

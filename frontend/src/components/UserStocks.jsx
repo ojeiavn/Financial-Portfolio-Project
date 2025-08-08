@@ -14,10 +14,10 @@ const UserStocks = () => {
         })
         .then((jsondata)=> {
             jsondata.map((item, idx) => {
-                console.log(item.Symbol +" - " +idx)
-
+                console.log(item.type +" - " +idx)
             })
-            setData(jsondata)
+            const stockOnly = jsondata.filter((item) => item.type === "Stock");
+            setData(stockOnly);
         })
         .catch((err) => {
             setMsg("Failed to connect "+err)
