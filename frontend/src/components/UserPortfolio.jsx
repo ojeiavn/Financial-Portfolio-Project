@@ -3,8 +3,12 @@ import UserStocks from "./UserStocks";
 import UserOtherAssests from "./UserOtherAssests";
 import UserCharts from "./UserCharts";
 import LiveClock from "./LiveClock";
+import TestConnection from "./TestConnection";
 
 const UserPortfolio = () => {
+
+    // fetch("http://172.30.0.198:5000").then(response => response.json()).then(data=> console.log(data)).catch(e => console.log(e))
+
     return (
         <div className="flex flex-col h-screen items-center bg-bg-light p-5 overflow-hidden font-main">
             {/* Heading */}
@@ -12,6 +16,9 @@ const UserPortfolio = () => {
             <div className="text-white w-screen text-end pr-20"><LiveClock /> </div>
 
             
+            {/* <TestConnection className="text-white" /> */}
+            <TestConnection />
+
             <div className="flex justify-between bg-bg-light m-0 p-6 text-white w-full overflow-y-auto">
                 
                 {/* Left side panel */}
