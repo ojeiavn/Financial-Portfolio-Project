@@ -41,11 +41,9 @@ def getPrices():
         cursor = conn.cursor(dictionary=True)
         # SQL query to group holdings by symbol and calculate totals
         query = """
-            SELECT Symbol, 
-                   SUM(Quantity) AS Quantity, 
-                   SUM(Quantity * Price) AS Price
-            FROM Holdings
-            GROUP BY Symbol
+            SELECT h.Symbol, p.Name, sum(Quantity) AS Quantity, sum(Quantity*Price) AS Price
+            FROM holdings h INNER JOIN products p ON h.symbol=p.symbol
+            GROUP BY h.symbol
         """
 # Executes the query
         cursor.execute(query)
@@ -73,7 +71,7 @@ def getPricesForType(type):
         cursor = conn.cursor(dictionary=True)
 
 # Executes the query
-        cursor.execute('SELECT h.Symbol, sum(Quantity) AS Quantity, sum(Quantity*Price) AS Price FROM holdings h INNER JOIN products p ON h.symbol=p.symbol WHERE p.Type=%s GROUP BY h.symbol', (type,))
+        cursor.execute('SELECT h.Symbol, p.Name, sum(Quantity) AS Quantity, sum(Quantity*Price) AS Price FROM holdings h INNER JOIN products p ON h.symbol=p.symbol WHERE p.Type=%s GROUP BY h.symbol', (type,))
 
 # Fetches all results as a list of dictionaries
         results = cursor.fetchall()
