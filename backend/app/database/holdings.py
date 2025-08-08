@@ -8,7 +8,7 @@ import yfinance
 def getHoldings():
     try:
         cursor = conn.cursor(dictionary=True)
-        cursor.execute('SELECT * FROM Holdings')
+        cursor.execute('SELECT h.HoldingId, h.Username, h.Symbol, h.Quantity, h.Price, p.type FROM Holdings as h INNER JOIN Products as p on h.symbol=p.symbol;')
         holdings = cursor.fetchall()
     except Exception as e:
         return jsonify({'error': 'Failed to fetch holdings', 'details': str(e)}), 500
@@ -24,7 +24,7 @@ def getHoldings():
 def getHolding(holding_id):
     try:
         cursor = conn.cursor(dictionary=True)
-        cursor.execute('SELECT * FROM Holdings WHERE HoldingId = %s', (holding_id,))
+        cursor.execute('SELECT h.HoldingId, h.Username, h.Symbol, h.Quantity, h.Price, p.type FROM Holdings as h INNER JOIN Products as p on h.symbol=p.symbol WHERE h.HoldingId = %s', (holding_id,))
         holding = cursor.fetchone()
         if not holding:
             return jsonify({'error': 'Holding not found'}), 404
