@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+
 
 /* ========== ROOT VARIABLES ========== */
 :root {
@@ -48,7 +47,6 @@ h1, h2, h3 {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
   gap: var(--space-lg);
-  justify-content: center;
 }
 
 /* ========== CENTER PANEL GRID LAYOUT ========== */
@@ -63,7 +61,7 @@ h1, h2, h3 {
   gap: var(--space-md);
   width: 100%;
   align-items: center;
-  padding-left: var(--space-xs);
+  padding-left: var(--space-md);
   display: flex;
   flex-direction: column;
 
