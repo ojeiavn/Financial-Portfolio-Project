@@ -37,12 +37,13 @@ const UserCharts = () => {
         fetch("http://172.30.0.198:5000/holdings" || "http://localhost:5000/holdings")
         .then((res) =>  res.json())
         .then((jsondata)=> {
+            const stockOnly = jsondata.filter((item) => item.type === "Stock");
             setState((prev) => ({
                 ...prev,
-                series: jsondata.map((i) => Number(i.Quantity)),
+                series: stockOnly.map((i) => Number(i.Quantity)),
                 options: {
                     ...prev.options,
-                    labels: jsondata.map((i) => i.Symbol),
+                    labels: stockOnly.map((i) => i.Symbol),
                 },
             }))
         })
