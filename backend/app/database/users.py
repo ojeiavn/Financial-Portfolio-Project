@@ -5,7 +5,7 @@ from database.db import app
 
 # GET all users
 @app.route('/users', methods=['GET'])
-def get_users():
+def getUsers():
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute('SELECT * FROM Users')
@@ -19,7 +19,7 @@ def get_users():
 
 # POST a new user
 @app.route('/users', methods=['POST'])
-def add_user():
+def addUser():
     data = request.get_json()
     username = data.get('username')
     name = data.get('name')
@@ -48,7 +48,7 @@ def add_user():
 
 # PUT (update) a user by username
 @app.route('/users/<string:username>', methods=['PUT'])
-def update_user(username):
+def updateUser(username):
     data = request.get_json()
     name = data.get('name')
     email = data.get('email')
@@ -80,7 +80,7 @@ def update_user(username):
 
 # DELETE a user by username
 @app.route('/users/<string:username>', methods=['DELETE'])
-def delete_user(username):
+def deleteUser(username):
     try:
         cursor = conn.cursor()
         cursor.execute('DELETE FROM Users WHERE Username = %s', (username,))

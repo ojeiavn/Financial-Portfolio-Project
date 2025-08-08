@@ -23,7 +23,7 @@ app = Flask("api")
 CORS(app)  # Enable CORS right after app creation
 api = Api(app)
 
-def dbcreate():
+def dbCreate():
     try:
         conn = mysql.connector.connect(
             host="localhost",
@@ -88,7 +88,7 @@ def dbcreate():
         cursor.close()
         conn.close()
 
-def dbdummy():
+def dbDummy():
     sql = "INSERT INTO Users VALUES(%s,%s,%s,%s)"
     data = [
         ('Fridah','Fridah','Fridah@email.com','+1 123 456 7890'),
