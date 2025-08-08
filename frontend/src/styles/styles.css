@@ -69,3 +69,19 @@
 .font-main {
   font-family: var(--font-main);
 }
+
+.scrollbar-thin::-webkit-scrollbar{
+  width:8px;
+  height: 8px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+  border: solid 2px  #f1f1f1;
+}
+.scrollbar-thin ::-webkit-scrollbar-thumb:hover {
+  background-color:  #555;
+}
