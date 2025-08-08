@@ -5,7 +5,7 @@ import yfinance
 
 # GET news about stocks
 @app.route('/news', methods=['GET'])
-def get_news():
+def getNews():
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute('SELECT * FROM Products where Type="Stock"')
@@ -26,7 +26,7 @@ def get_news():
 
 # GET as news about a single stock by symbol
 @app.route('/news/<symbol>', methods=['GET'])
-def get_news_specific(symbol):
+def getNewsForSymbol(symbol):
     newsinfos=yfinance.Ticker(symbol).news
     news=[]
     for newsinfo in newsinfos:
@@ -35,7 +35,7 @@ def get_news_specific(symbol):
 
 # GET quantity, total price and current price summary grouped by symbol
 @app.route('/prices', methods=['GET'])
-def get_prices():
+def getPrices():
     try:
         # Create a dictionary cursor to get results as dicts
         cursor = conn.cursor(dictionary=True)
@@ -67,7 +67,7 @@ def get_prices():
 
 # GET quantity, total price and current price summary grouped by symbol for product type
 @app.route('/prices/<type>', methods=['GET'])
-def get_pricesfortype(type):
+def getPricesForType(type):
     try:
         # Create a dictionary cursor to get results as dicts
         cursor = conn.cursor(dictionary=True)
@@ -92,7 +92,7 @@ def get_pricesfortype(type):
 
 # GET total price and current price summary
 @app.route('/allprices', methods=['GET'])
-def get_allprices():
+def getAllPrices():
     try:
         # Create a dictionary cursor to get results as dicts
         cursor = conn.cursor(dictionary=True)
@@ -126,7 +126,7 @@ def get_allprices():
 
 # GET total price and current price summary for product type
 @app.route('/allprices/<type>', methods=['GET'])
-def get_allpricesfortype(type):
+def getAllPricesForType(type):
     try:
         # Create a dictionary cursor to get results as dicts
         cursor = conn.cursor(dictionary=True)

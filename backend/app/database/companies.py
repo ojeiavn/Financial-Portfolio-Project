@@ -4,7 +4,7 @@ from database.db import app
         
 # GET all companies
 @app.route('/companies', methods=['GET'])
-def get_companies():
+def getCompanies():
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM Companies")
@@ -17,7 +17,7 @@ def get_companies():
     
 # GET a single company by symbol
 @app.route('/companies/<symbol>', methods=['GET'])
-def get_company(symbol):
+def getCompany(symbol):
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM Companies WHERE Symbol=%s", (symbol,))
@@ -30,7 +30,7 @@ def get_company(symbol):
 
 # DELETE comapny by symbol
 @app.route('/companies/<symbol>', methods=['DELETE'])
-def delete_company(symbol):
+def deleteCompany(symbol):
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute('DELETE FROM Companies WHERE Symbol = %s', (symbol,))

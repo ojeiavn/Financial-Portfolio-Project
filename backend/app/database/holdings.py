@@ -5,10 +5,10 @@ import yfinance
 
 # GET all holdings
 @app.route('/holdings', methods=['GET'])
-def get_holdings():
+def getHoldings():
     try:
         cursor = conn.cursor(dictionary=True)
-        cursor.execute('SELECT * FROM Holdings')
+        cursor.execute('SELECT h.HoldingId, h.Username, h.Symbol, h.Quantity, h.Price, p.type FROM Holdings as h INNER JOIN Products as p on h.symbol=p.symbol;')
         holdings = cursor.fetchall()
     except Exception as e:
         return jsonify({'error': 'Failed to fetch holdings', 'details': str(e)}), 500
@@ -21,10 +21,10 @@ def get_holdings():
 
 # GET a single holding by ID
 @app.route('/holdings/<int:holding_id>', methods=['GET'])
-def get_holding(holding_id):
+def getHolding(holding_id):
     try:
         cursor = conn.cursor(dictionary=True)
-        cursor.execute('SELECT * FROM Holdings WHERE HoldingId = %s', (holding_id,))
+        cursor.execute('SELECT h.HoldingId, h.Username, h.Symbol, h.Quantity, h.Price, p.type FROM Holdings as h INNER JOIN Products as p on h.symbol=p.symbol WHERE h.HoldingId = %s', (holding_id,))
         holding = cursor.fetchone()
         if not holding:
             return jsonify({'error': 'Holding not found'}), 404
@@ -37,7 +37,7 @@ def get_holding(holding_id):
 
 # POST new holding
 @app.route('/holdings', methods=['POST'])
-def add_holding():
+def addHolding():
     data = request.get_json()
     username = data.get('username')
     symbol = data.get('symbol')
@@ -110,7 +110,7 @@ def add_holding():
 
 # PUT update holding by ID
 @app.route('/holdings/<int:holding_id>', methods=['PUT'])
-def update_holding(holding_id):
+def updateHolding(holding_id):
     data = request.get_json()
     quantity = data.get('quantity')
     price = data.get('price')
@@ -144,7 +144,7 @@ def update_holding(holding_id):
 
 # DELETE holding by ID
 @app.route('/holdings/<int:holding_id>', methods=['DELETE'])
-def delete_holding(holding_id):
+def deleteHolding(holding_id):
     try:
         cursor = conn.cursor()
         cursor.execute('DELETE FROM Holdings WHERE HoldingId = %s', (holding_id,))

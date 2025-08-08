@@ -4,7 +4,7 @@ from database.db import app
 
 # GET all products
 @app.route('/products', methods=['GET'])
-def get_products():
+def getProducts():
     cursor = conn.cursor(dictionary=True)
     cursor.execute('SELECT * FROM Products')
     products = cursor.fetchall()
@@ -13,7 +13,7 @@ def get_products():
 
 # GET single product by ID
 @app.route('/products/<symbol>', methods=['GET'])
-def get_product(symbol):
+def getProduct(symbol):
     cursor = conn.cursor(dictionary=True)
     cursor.execute('SELECT * FROM Products WHERE Symbol = %s', (symbol,))
     product = cursor.fetchone()
@@ -25,7 +25,7 @@ def get_product(symbol):
 
 # POST new product
 @app.route('/products', methods=['POST'])
-def add_product():
+def addProduct():
     data = request.get_json()
     symbol = data.get('symbol')  # company symbol PK
     name = data.get('name')  # company name
@@ -51,7 +51,7 @@ def add_product():
 
 # PUT update product
 @app.route('/products/<symbol>', methods=['PUT'])
-def update_product(symbol):
+def updateProduct(symbol):
     data = request.get_json()
     name = data.get('name')
     type = data.get('type')
@@ -76,7 +76,7 @@ def update_product(symbol):
 
 # DELETE product
 @app.route('/products/<symbol>', methods=['DELETE'])
-def delete_product(symbol):
+def deleteProduct(symbol):
     cursor = conn.cursor()
     cursor.execute('SELECT * FROM Products WHERE Symbol = %s', (symbol,))
     if cursor.fetchone() is None:
