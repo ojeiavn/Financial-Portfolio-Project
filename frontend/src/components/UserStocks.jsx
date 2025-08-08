@@ -26,15 +26,15 @@ const UserStocks = () => {
 
     return (
         <>
-            <div className="overflow-y-auto scrollbar-thin pr-1">
-                <div className="text-xl py-5">Total Net Worth: $234,567</div>
-                    <div className="flex flex-col">
-                        <div className="text-lg p-2">Total Stocks Owned</div>
+            <div className="overflow-y-auto scrollbar-thin pr-1 assests">
+                <div className="text-xl py-5 netWorth">Total Net Worth: $234,567</div>
+                    <div className="flex flex-col innerCol">
+                        <div className="text-lg p-2 title">Total Stocks Owned</div>
                         {data.map((item, idx) => (
-                            <div className="flex justify-between p-3 bg-bg-dark rounded-lg m-1">
-                                <span className="p-1">{item.Symbol}</span>
+                            <div className="flex justify-between p-3 bg-bg-dark rounded-lg m-1 items">
+                                <span className="p-1 symbol">{item.Symbol}</span>
                                 <div>
-                                    <button className="py-1 px-2 mr-1 w-10 bg-bg-light rounded-lg">{item.Quantity}</button>
+                                    <button className="py-1 px-2 mr-1 w-10 bg-bg-light rounded-lg quantity">{item.Quantity}</button>
                                     <button className="py-1 px-2 ml-1 w-10 bg-bg-light rounded-lg cursor-pointer sellBtn">Sell</button>
                                 </div>
                             </div>

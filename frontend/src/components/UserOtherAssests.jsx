@@ -29,25 +29,25 @@ const UserOtherAssests = () => {
 
     return (
         <>
-            <div className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200">
-                    <div className="flex flex-col ">
-                        <div className="text-lg p-2">Total Bonds Owned</div>
+            <div className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200 assests">
+                    <div className="flex flex-col innerCol">
+                        <div className="text-lg p-2 title">Total Bonds Owned</div>
                         {bonddata.map((item, idx) => (
-                            <div className="flex justify-between p-3 bg-bg-dark rounded-lg m-1">
-                                <span className="p-1">{item.Symbol}</span>
+                            <div className="flex justify-between p-3 bg-bg-dark rounded-lg m-1 items">
+                                <span className="p-1 symbol">{item.Symbol}</span>
                                 <div>
-                                    <button className="py-1 px-2 mr-1 w-10 bg-bg-light rounded-lg">{item.Quantity}</button>
+                                    <button className="py-1 px-20 mr-1 w-10 bg-bg-light rounded-lg quantity">{item.Quantity}</button>
                                     <button className="py-1 px-2 ml-1 w-10 bg-bg-light rounded-lg cursor-pointer sellBtn">Sell</button>
                                 </div>
                             </div>
                         ))}
 
-                        <div className="text-lg p-2">Total Amount of Cash</div>
+                        <div className="text-lg p-2 title">Total Amount of Cash</div>
                         {cashdata.map((item, idx) => (
-                            <div className="flex justify-between p-3 bg-bg-dark rounded-lg m-1">
-                                <span className="p-1">{item.Symbol}</span>
+                            <div className="flex justify-between p-3 bg-bg-dark rounded-lg m-1 items">
+                                <span className="p-1 symbol">{item.Symbol}</span>
                                 <div>
-                                    <button className="py-1 px-2 mr-1 w-10 bg-bg-light rounded-lg">{item.Quantity}</button>
+                                    <button className="py-1 px-2 mr-1 w-10 bg-bg-light rounded-lg quantity">{item.Quantity}</button>
                                     <button className="py-1 px-2 ml-1 w-10 bg-bg-light rounded-lg cursor-pointer sellBtn">Sell</button>
                                 </div>
                             </div>
