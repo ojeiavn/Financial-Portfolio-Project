@@ -1,48 +1,44 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 
 const UserStocks = () => {
+
+    const [data, setData] = useState([])
+    
+    useEffect(() => {
+        fetch("http://172.30.0.198:5000/holdings" || "http://localhost:5000/holdings")
+        .then((res) => {
+            if(!res.ok) {
+                throw new Error("Network reposnse not ok");
+            }
+            return res.json();
+        })
+        .then((jsondata)=> {
+            jsondata.map((item, idx) => {
+                console.log(item.Symbol +" - " +idx)
+
+            })
+            setData(jsondata)
+        })
+        .catch((err) => {
+            setMsg("Failed to connect "+err)
+        });
+    }, []);
+
     return (
         <>
-            <div>
+            <div className="overflow-y-auto scrollbar-thin pr-1">
                 <div className="text-xl py-5">Total Net Worth: $234,567</div>
                     <div className="flex flex-col">
                         <div className="text-lg p-2">Total Stocks Owned</div>
-                        <div className="flex justify-between p-3 bg-bg-dark rounded-lg m-1">
-                            <span className="p-1">META</span>
-                            <div>
-                                <button className="py-1 px-2 mr-1 w-10 bg-bg-light rounded-lg">10</button>
-                                <button className="py-1 px-2 ml-1 w-10 bg-bg-light rounded-lg cursor-pointer sellBtn">Sell</button>
+                        {data.map((item, idx) => (
+                            <div className="flex justify-between p-3 bg-bg-dark rounded-lg m-1">
+                                <span className="p-1">{item.Symbol}</span>
+                                <div>
+                                    <button className="py-1 px-2 mr-1 w-10 bg-bg-light rounded-lg">{item.Quantity}</button>
+                                    <button className="py-1 px-2 ml-1 w-10 bg-bg-light rounded-lg cursor-pointer sellBtn">Sell</button>
+                                </div>
                             </div>
-                        </div>
-                        <div className="flex justify-between p-3 bg-bg-dark rounded-lg m-1">
-                            <span className="p-1">APPLE</span>
-                            <div>
-                                <button className="py-1 px-2 mr-1 w-10 bg-bg-light rounded-lg">6</button>
-                                <button className="py-1 px-2 ml-1 w-10 bg-bg-light rounded-lg cursor-pointer sellBtn">Sell</button>
-                            </div>
-                        </div>
-                        <div className="flex justify-between p-3 bg-bg-dark rounded-lg m-1">
-                            <span className="p-1">WELLS FARGO</span>
-                            <div>
-                                <button className="py-1 px-2 mr-1 w-10 bg-bg-light rounded-lg">20</button>
-                                <button className="py-1 px-2 ml-1 w-10 bg-bg-light rounded-lg cursor-pointer sellBtn">Sell</button>
-                            </div>
-                        </div>
-                        <div className="flex justify-between p-3 bg-bg-dark rounded-lg m-1">
-                            <span className="p-1">GOOGLE</span>
-                            <div>
-                                <button className="py-1 px-2 mr-1 w-10 bg-bg-light rounded-lg">100</button>
-                                <button className="py-1 px-2 ml-1 w-10 bg-bg-light rounded-lg cursor-pointer sellBtn">Sell</button>
-                            </div>
-                        </div>
-                        <div className="flex justify-between p-3 bg-bg-dark rounded-lg m-1">
-                            <span className="p-1">NETFLIX</span>
-                            <div>
-                                <button className="py-1 px-2 mr-1 w-10 bg-bg-light rounded-lg">120</button>
-                                <button className="py-1 px-2 ml-1 w-10 bg-bg-light rounded-lg cursor-pointer sellBtn">Sell</button>
-                            </div>
-                        </div>
-
+                        ))}
                     </div>
                 </div>
         </>

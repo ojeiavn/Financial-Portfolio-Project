@@ -1,17 +1,18 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import ApexCharts from 'apexcharts'
 import ReactApexChart from 'react-apexcharts'
 
-const UserCharts = () => {
+const UserCharts = () => { 
+     
     const [state, setState] = React.useState({
           
-        series: [44, 55, 13, 43, 22],
+        series: [], // 44, 55, 13, 43, 22
         options: {
             chart: {
                 width: 380,
                 type: 'pie',
             },
-            labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+            labels: [], // 'Team A', 'Team B', 'Team C', 'Team D', 'Team E'
             legend: {
                 position: 'bottom',
                 labels: {
@@ -31,6 +32,25 @@ const UserCharts = () => {
             }]
         },  
     });
+    
+    useEffect(() => {
+        fetch("http://172.30.0.198:5000/holdings" || "http://localhost:5000/holdings")
+        .then((res) =>  res.json())
+        .then((jsondata)=> {
+            setState((prev) => ({
+                ...prev,
+                series: jsondata.map((i) => Number(i.Quantity)),
+                options: {
+                    ...prev.options,
+                    labels: jsondata.map((i) => i.Symbol),
+                },
+            }))
+        })
+        .catch((err) => {
+            setMsg("Failed fetch data:  "+err)
+        });
+    }, []);   
+ 
 
     return (
         <>

@@ -17,7 +17,6 @@ const UserPortfolio = () => {
 
             
             {/* <TestConnection className="text-white" /> */}
-            <TestConnection />
 
             <div className="flex justify-between bg-bg-light m-0 p-6 text-white w-full overflow-y-auto">
                 
