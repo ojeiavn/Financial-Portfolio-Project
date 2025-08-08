@@ -1,5 +1,5 @@
-@tailwind base;
-@tailwind components;
+@tailwind/preflight;
+@tailwind utilities;
 @tailwind utilities;
 
 /* ========== ROOT VARIABLES ========== */
@@ -267,9 +267,26 @@ h1 + #clock {
 }
 
 
-.overview-buttons:hover {
+
+.buy-buttons {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+    background-color: var(--bg-dark);
+  color: white;
+  padding: var(--space-sm) var(--space-md);
+  border: var(--border-default);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+
+.buy-buttons:hover {
   background-color: var(--accent-green);
 }
+
 
 @media (max-width: 768px) {
   .dashboard {
