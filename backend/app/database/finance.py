@@ -166,3 +166,17 @@ def sellHolding(symbol):
     finally:
         cursor.close()
     return jsonify({'message': 'Holding sold successfully'})
+
+# Buy the product by symbol
+@app.route('/buy/<symbol>', methods=['POST'])
+def buyHolding(symbol):
+    try:
+        currentPrice=yfinance.Ticker(symbol).fast_info.last_price
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('INSERT INTO Holdings (Username, Symbol, Quantity, Price) VALUES ("Fridah", %s, 1, %s);', (symbol.upper(), currentPrice,))
+        conn.commit()
+    except Exception as e:
+        return jsonify({'error': 'Failed to fetch holding', 'details': str(e)}), 500
+    finally:
+        cursor.close()
+    return jsonify({'message': 'Holding bought successfully'})
