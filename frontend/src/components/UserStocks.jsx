@@ -5,7 +5,6 @@ const UserStocks = () => {
 
   const [prices, setPrices] = useState([]);
   const [holdings, setHoldings] = useState([]);
-  const [merged, setMerged] = useState([]);
 
   useEffect(() => {
     try {
@@ -21,17 +20,22 @@ const UserStocks = () => {
           //     console.log(item.Type +" - " +idx)
           // })
           const stockOnly = jsondata.filter((item) => item.Type === "Stock");
+
           setData(stockOnly);
         });
     } catch (e) {
       console.log(e);
     }
+
     async function fetchPrices() {
       try {
         const res = await fetch("http://localhost:5000/prices");
         if (!res.ok) throw new Error("HTTP error ", res.status);
         const jsonData = await res.json();
         const stockOnly = jsonData.filter((item) => item.Type === "Stock");
+        // const stocksWithQuantityGreaterThanZero = stockOnly.filter(
+        //   (stock) => stock.Quantity > 0
+        // );
         setPrices(stockOnly);
       } catch (e) {
         console.log("error: " + e);
@@ -61,38 +65,23 @@ const UserStocks = () => {
     fetchAll();
   }, []);
 
-  //   useEffect(() => {
-  //     async function mergeData() {
-  //       try {
-  //         const mergedData = prices.map((item) => {
-  //           const holdingItem = holdings.find((h) => h.Symbol === item.Symbol);
-  //           console.log(
-  //             "prices item: ",
-  //             item.Symbol,
-  //             " holding item: ",
-  //             holdingItem.HoldingId
-  //           );
-  //           //   return {
-  //           //     ...item,
-  //           //     HoldingId: holdingItem ? holdingItem.holdingid : null,
-  //           //   };
-  //         });
-  //         // setMerged(mergedData);
-  //         console.log("merged data: ", mergedData);
-  //         // setMerged(mergeddata);
-  //       } catch (e) {
-  //         console.log(e);
-  //       }
-  //     }
-
-  //     mergeData();
-  //   });
-
-  const handleSell = async (item) => {
-    merged.map((item) => {
-      console.log("merged item = ", item);
-    });
-    console.log("handle sell item = " + item.Symbol);
+  const handleSell = async (symbol) => {
+    console.log("handle sell item = " + symbol);
+    try {
+      const res = await fetch(`http://localhost:5000/sell/${symbol}`, {
+        method: "PUT",
+      });
+      if (!res.ok) {
+        // const error = await res.json();
+        // console.log("error: ", error);
+        alert("Failed to sell");
+      }
+      //   const result = await res.json();
+      //   console.log("result: ", result);
+      alert("Successfull sold the stock");
+    } catch (e) {
+      console.log("Error selling: ", e);
+    }
   };
 
   return (
@@ -101,25 +90,27 @@ const UserStocks = () => {
         <div className="text-xl py-5 netWorth">Total Net Worth: $234,567</div>
         <div className="flex flex-col innerCol">
           <div className="text-lg p-2 title">Total Stocks Owned</div>
-          {data.map((item, idx) => (
-            <div
-              className="flex justify-between p-3 bg-bg-dark rounded-lg m-1 items"
-              key={idx}
-            >
-              <span className="p-1 symbol">{item.Symbol}</span>
-              <div>
-                <button className="py-1 px-2 mr-1 w-10 bg-bg-light rounded-lg quantity">
-                  {item.Quantity}
-                </button>
-                <button
-                  className="py-1 px-2 ml-1 w-10 bg-bg-light rounded-lg cursor-pointer sellBtn"
-                  onClick={() => handleSell(item)}
-                >
-                  Sell
-                </button>
+          {prices
+            .filter((item) => item.Quantity > 0)
+            .map((item, idx) => (
+              <div
+                className="flex justify-between p-3 bg-bg-dark rounded-lg m-1 items"
+                key={idx}
+              >
+                <span className="p-1 symbol">{item.Symbol}</span>
+                <div>
+                  <button className="py-1 px-2 mr-1 w-10 bg-bg-light rounded-lg quantity">
+                    {item.Quantity}
+                  </button>
+                  <button
+                    className="py-1 px-2 ml-1 w-10 bg-bg-light rounded-lg cursor-pointer sellBtn"
+                    onClick={() => handleSell(item.Symbol)}
+                  >
+                    Sell
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     </>
