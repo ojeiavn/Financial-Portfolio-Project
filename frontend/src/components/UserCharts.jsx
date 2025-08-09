@@ -34,7 +34,7 @@ const UserCharts = () => {
     });
     
     useEffect(() => {
-        fetch("http://172.30.0.198:5000/prices" || "http://localhost:5000/prices")
+        fetch("http://localhost:5000/prices")
         .then((res) =>  res.json())
         .then((jsondata)=> {
             const stockOnly = jsondata.filter((item) => item.Type === "Stock");
