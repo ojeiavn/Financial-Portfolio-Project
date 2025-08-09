@@ -9,7 +9,7 @@ def dbconn():
         conn = mysql.connector.connect(
             host = "localhost",
             user = "root",
-            password = "n3u3da!",
+            password = "root",
             database = "Portfolio"
         )
         print(conn)
@@ -28,7 +28,7 @@ def dbCreate():
         conn = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="n3u3da!"
+            password="root"
         )
     except Exception as e:
         print(f"Failed to connect to the database {e}")
