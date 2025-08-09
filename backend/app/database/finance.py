@@ -148,3 +148,21 @@ def getAllPricesForType(type):
         AllPrices["Prices"]=AllPrices.get("Prices")+result.get("Price")
         AllPrices["CurrentPrices"]=AllPrices.get("CurrentPrices")+yfinance.Ticker(result.get("Symbol")).fast_info.last_price*float(result.get("Quantity"))
     return jsonify(AllPrices)
+
+# Sell the holding with the highest price for symbol
+@app.route('/sell/<symbol>', methods=['PUT'])
+def sellHolding(symbol):
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute('SELECT HoldingId FROM Holdings WHERE Price IN (SELECT (MAX(Price)) FROM Holdings WHERE Symbol=%s AND Quantity>0) AND Symbol=%s AND Quantity>0;', (symbol, symbol,))
+        holdingId = cursor.fetchone().get('HoldingId')
+        if not holdingId:
+            return jsonify({'error': 'Holding not found'}), 404
+        else:
+            cursor.execute('UPDATE Holdings SET Quantity=Quantity-1 WHERE HoldingId=%s;', (holdingId,))
+            conn.commit()
+    except Exception as e:
+        return jsonify({'error': 'Failed to fetch holding', 'details': str(e)}), 500
+    finally:
+        cursor.close()
+    return jsonify({'message': 'Holding sold successfully'})
