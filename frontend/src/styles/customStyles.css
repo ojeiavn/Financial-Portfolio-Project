@@ -1,0 +1,101 @@
+.outerDiv {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.25rem;
+    overflow: hidden;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.myportfolio {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-radius: 1rem;
+    font-size: 1.25rem;
+}
+
+.liveClock {
+    width: 100vw;
+    text-align: end;
+    padding-right: 5rem;
+}
+
+.innerDiv {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    padding: 1.5rem;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.graphs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.assests {
+    overflow-y: auto;
+    padding: 0.25rem;
+}
+
+.netWorth {
+    font-size: 1.25rem;
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+}
+
+.innerCol {
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 1.125rem;
+    padding: 0.5rem;
+}
+
+.items {
+    display: flex;
+    justify-content: space-between;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    margin: 0.25rem;
+}
+
+.symbol {
+    padding: 0.25rem;
+}
+
+.quantity {
+    padding: 0.5rem;
+    margin-right: 0.25rem;
+    border-radius: 0.5rem;
+    font-size: medium;
+    color: white;
+    border: none;
+}
+
+.sellBtn {
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-left: 0.25rem;
+    border-radius: 0.5rem;
+    font-size: medium;
+    color: white;
+    border: none;
+}
+
+.desc{
+    padding: 0.15rem;
+    font-weight: bold;
+}
+
+.descDiv {
+    display: flex;
+    flex-direction: row;
+}
