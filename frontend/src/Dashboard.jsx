@@ -12,8 +12,6 @@ export function Dashboard() {
 
     <div className="dashboard">
       <header>
-        <h1>Financial Portfolio</h1>
-          <LiveClock />
       </header> 
       <LeftPanel setCompanyName={setCompanyName} />
       <CenterPanel companyName={companyName} />
