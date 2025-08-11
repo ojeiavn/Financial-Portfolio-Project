@@ -6,45 +6,55 @@ export function LeftPanel({ setCompanyName }) {
   const [productData, setProductData] = useState([]);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      fetch(`http://192.168.1.100:5000/prices/${productType}`)
-        .then((res) =>
-          res.json().then((data) => {
-            console.log('Fetched data:', data);
-            setProductData(data);
-          })
-        )
-        .catch((error) => {
-          console.error('Error fetching product data:', error);
-        });
-    }, 5000); // 5 seconds interval
+    let abort = false;
 
-    return () => clearInterval(intervalId); // Cleanup the interval on component unmount
-  }, [productType]); // Dependency array ensures the effect runs again when `productType` changes
+    const load = async () => {
+      try {
+        const res = await fetch(`http://192.168.1.100:5000/prices/${productType}`);
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        const data = await res.json();
+        if (!abort) setProductData(Array.isArray(data) ? data : Object.values(data || {}));
+      } catch (e) {
+        if (!abort) setProductData([]);
+        console.error("Error fetching product data:", e);
+      }
+    };
+
+    load();                         
+    const id = setInterval(load, 5000);
+    return () => { abort = true; clearInterval(id); };
+  }, [productType]);
 
   return (
-    <div className="left-panel">
+    <aside className="left-panel">
       <div id="sbc-buttons">
         <button type="button" onClick={() => setProductType("stock")}>Stocks</button>
         <button type="button" onClick={() => setProductType("bond")}>Bonds</button>
         <button type="button" onClick={() => setProductType("cash")}>Cash</button>
       </div>
 
-      {productData.length > 0 ? (
-        productData.map((p, i) => (
-          <ProductCard
-            key={i}
-            value={p.Price}
-            percentage={((p.CurrentPrice - parseFloat(p.Price)) / parseFloat(p.Price)) * 100}
-            change={(p.CurrentPrice - parseFloat(p.Price)).toFixed(4)}
-            name={p.Symbol}
-            color={p.CurrentPrice > parseFloat(p.Price) ? "green" : "red"}
-            onClick={setCompanyName}
-          />
-        ))
-      ) : (
-        <div>No products available</div>
-      )}
-    </div>
+      <div className="left-panel__card"> 
+        {productData.map((p, i) => {
+          const price = Number(p.Price);
+          const current = Number(p.CurrentPrice);
+          const change = current - price;
+          const pct = price ? (change / price) * 100 : 0;
+
+          return (
+            <div key={p.Symbol ?? i} className="product-card">
+              <ProductCard
+                value={price?.toFixed(2)}
+                percentage={pct}
+                change={change.toFixed(4)}
+                name={p.Symbol}
+                color={current > price ? "green" : "red"}
+                onClick={() => setCompanyName(p.Symbol)}
+              />
+            </div>
+          );
+        })}
+      </div>
+    </aside>
   );
 }
+
