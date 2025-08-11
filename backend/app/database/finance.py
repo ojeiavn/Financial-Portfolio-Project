@@ -36,6 +36,7 @@ def getNewsForSymbol(symbol):
 # GET quantity, total price and current price summary grouped by symbol
 @app.route('/prices', methods=['GET'])
 def getPrices():
+    cursor=None
     try:
         # Create a dictionary cursor to get results as dicts
         cursor = conn.cursor(dictionary=True)
@@ -56,8 +57,9 @@ def getPrices():
         return jsonify({'error': 'Failed to fetch prices', 'details': str(e)}), 500
 
     finally:
+        if cursor is not None:
         # Always close the cursor to free resources
-        cursor.close()
+            cursor.close()
     
     for result in results:
         result["CurrentPrice"]=yfinance.Ticker(result.get("Symbol")).fast_info.last_price*float(result.get("Quantity"))
@@ -66,6 +68,7 @@ def getPrices():
 # GET quantity, total price and current price summary grouped by symbol for product type
 @app.route('/prices/<type>', methods=['GET'])
 def getPricesForType(type):
+    cursor=None
     try:
         # Create a dictionary cursor to get results as dicts
         cursor = conn.cursor(dictionary=True)
@@ -82,7 +85,8 @@ def getPricesForType(type):
 
     finally:
         # Always close the cursor to free resources
-        cursor.close()
+        if cursor is not None:
+            cursor.close()
     
     for result in results:
         result["CurrentPrice"]=yfinance.Ticker(result.get("Symbol")).fast_info.last_price*float(result.get("Quantity"))
@@ -91,6 +95,7 @@ def getPricesForType(type):
 # GET total price and current price summary
 @app.route('/allprices', methods=['GET'])
 def getAllPrices():
+    cursor=None
     try:
         # Create a dictionary cursor to get results as dicts
         cursor = conn.cursor(dictionary=True)
@@ -113,8 +118,9 @@ def getAllPrices():
         return jsonify({'error': 'Failed to fetch prices', 'details': str(e)}), 500
 
     finally:
+        if cursor is not None:
         # Always close the cursor to free resources
-        cursor.close()
+            cursor.close()
     
     AllPrices={"Prices":0, "CurrentPrices":0}
     for result in results:
@@ -125,6 +131,7 @@ def getAllPrices():
 # GET total price and current price summary for product type
 @app.route('/allprices/<type>', methods=['GET'])
 def getAllPricesForType(type):
+    cursor=None
     try:
         # Create a dictionary cursor to get results as dicts
         cursor = conn.cursor(dictionary=True)
@@ -140,8 +147,9 @@ def getAllPricesForType(type):
         return jsonify({'error': 'Failed to fetch prices', 'details': str(e)}), 500
 
     finally:
+        if cursor is not None:
         # Always close the cursor to free resources
-        cursor.close()
+            cursor.close()
     
     AllPrices={"Prices":0, "CurrentPrices":0}
     for result in results:
@@ -152,6 +160,7 @@ def getAllPricesForType(type):
 # Sell the holding with the highest price for symbol
 @app.route('/sell/<symbol>', methods=['PUT'])
 def sellHolding(symbol):
+    cursor=None
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute('SELECT HoldingId FROM Holdings WHERE Price IN (SELECT (MAX(Price)) FROM Holdings WHERE Symbol=%s AND Quantity>0) AND Symbol=%s AND Quantity>0;', (symbol, symbol,))
@@ -164,12 +173,14 @@ def sellHolding(symbol):
     except Exception as e:
         return jsonify({'error': 'Failed to fetch holding', 'details': str(e)}), 500
     finally:
-        cursor.close()
+        if cursor is not None:
+            cursor.close()
     return jsonify({'message': 'Holding sold successfully'})
 
 # Buy the product by symbol
 @app.route('/buy/<symbol>', methods=['POST'])
 def buyHolding(symbol):
+    cursor=None
     try:
         currentPrice=yfinance.Ticker(symbol).fast_info.last_price
         cursor = conn.cursor(dictionary=True)
@@ -178,5 +189,6 @@ def buyHolding(symbol):
     except Exception as e:
         return jsonify({'error': 'Failed to fetch holding', 'details': str(e)}), 500
     finally:
-        cursor.close()
+        if cursor is not None:
+            cursor.close()
     return jsonify({'message': 'Holding bought successfully'})

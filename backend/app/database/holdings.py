@@ -6,6 +6,7 @@ import yfinance
 # GET all holdings
 @app.route('/holdings', methods=['GET'])
 def getHoldings():
+    cursor=None
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute('SELECT h.HoldingId, h.Username, h.Symbol, p.Name, h.Quantity, h.Price, p.type FROM Holdings as h INNER JOIN Products as p on h.symbol=p.symbol;')
@@ -13,7 +14,8 @@ def getHoldings():
     except Exception as e:
         return jsonify({'error': 'Failed to fetch holdings', 'details': str(e)}), 500
     finally:
-        cursor.close()
+        if cursor is not None:
+            cursor.close()
     for holding in holdings:
         holding["CurrentPrice"]=yfinance.Ticker(holding.get("Symbol")).fast_info.last_price
     return jsonify(holdings)
@@ -22,6 +24,7 @@ def getHoldings():
 # GET a single holding by ID
 @app.route('/holdings/<int:holding_id>', methods=['GET'])
 def getHolding(holding_id):
+    cursor=None
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute('SELECT h.HoldingId, h.Username, h.Symbol, p.Name, h.Quantity, h.Price, p.type FROM Holdings as h INNER JOIN Products as p on h.symbol=p.symbol WHERE h.HoldingId = %s', (holding_id,))
@@ -31,7 +34,8 @@ def getHolding(holding_id):
     except Exception as e:
         return jsonify({'error': 'Failed to fetch holding', 'details': str(e)}), 500
     finally:
-        cursor.close()
+        if cursor is not None:
+            cursor.close()
     return jsonify(holding)
 
 
@@ -47,6 +51,9 @@ def addHolding():
     # Validate inputs
     if not all([username, symbol, quantity, price]):
         return jsonify({'error': 'username, symbol, quantity, and price are required'}), 400
+    
+    cursor=None
+
     try:
         quantity = float(quantity)
         price = float(price)
@@ -54,7 +61,9 @@ def addHolding():
             return jsonify({'error': 'Quantity and price must be positive'}), 400
     except ValueError:
         return jsonify({'error': 'Quantity and price must be numbers'}), 400
-
+    
+    cursor=None
+    
     try:
         cursor = conn.cursor()
 
@@ -103,7 +112,8 @@ def addHolding():
     except Exception as e:
         return jsonify({'error': 'Failed to add holding', 'details': str(e)}), 500
     finally:
-        cursor.close()
+        if cursor is not None:
+            cursor.close()
 
     return jsonify({'message': 'Holding added successfully'}), 201
 
@@ -126,6 +136,7 @@ def updateHolding(holding_id):
     except ValueError:
         return jsonify({'error': 'Quantity and price must be numbers'}), 400
 
+    cursor=None
     try:
         cursor = conn.cursor()
         cursor.execute('UPDATE Holdings SET Quantity = %s, Price = %s WHERE HoldingId = %s',
@@ -137,14 +148,15 @@ def updateHolding(holding_id):
     except Exception as e:
         return jsonify({'error': 'Failed to update holding', 'details': str(e)}), 500
     finally:
-        cursor.close()
-
+        if cursor is not None:
+            cursor.close()
     return jsonify({'message': 'Holding updated successfully'})
 
 
 # DELETE holding by ID
 @app.route('/holdings/<int:holding_id>', methods=['DELETE'])
 def deleteHolding(holding_id):
+    cursor = None
     try:
         cursor = conn.cursor()
         cursor.execute('DELETE FROM Holdings WHERE HoldingId = %s', (holding_id,))
@@ -155,6 +167,7 @@ def deleteHolding(holding_id):
     except Exception as e:
         return jsonify({'error': 'Failed to delete holding', 'details': str(e)}), 500
     finally:
-        cursor.close()
+        if cursor is not None:
+            cursor.close()
 
     return jsonify({'message': 'Holding deleted successfully'})

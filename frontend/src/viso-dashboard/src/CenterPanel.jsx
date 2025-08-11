@@ -9,7 +9,6 @@ export function CenterPanel({ companyName }) {
         <div>Profit = $667,990</div>
       </div>
       <div className="finance-card">
-        <img src="/green-line.png" alt="Green graph" />
         <div>All time high = $678,559</div>
       </div>
       <div className="graph-box">

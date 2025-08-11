@@ -36,10 +36,10 @@ export const ApexChart = ({ companyName }) => {
     }
     setSeries([{ name: companyName, data }]);
     setOptions(prev => ({ ...prev, title: { ...prev.title, text: companyName } }));
-    const interval = setInterval(() => {
-      getNewSeries(lastDate, { min: 10, max: 90 });
-      ApexCharts.exec('realtime', 'updateSeries', [{ name: companyName, data }]);
-    }, 1000);
+    // const interval = setInterval(() => {
+    //   getNewSeries(lastDate, { min: 10, max: 90 });
+    //   ApexCharts.exec('realtime', 'updateSeries', [{ name: companyName, data }]);
+    // }, 20000);
     return () => clearInterval(interval);
   }, [companyName]);
 
