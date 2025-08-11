@@ -56,12 +56,14 @@ const UserPortfolio = () => {
         <UserOtherAssests />
       </div>
       <div className="descDiv">
-        {data.map((item, idx) => (
-          <div>
-            <span className="desc">{item.Symbol}: </span>
-            <span>{item.Name}</span>
-          </div>
-        ))}
+        {data
+          .filter((item) => item.Quantity > 0)
+          .map((item, idx) => (
+            <div>
+              <span className="desc">{item.Symbol}: </span>
+              <span>{item.Name}</span>
+            </div>
+          ))}
       </div>
     </div>
   );
