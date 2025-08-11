@@ -48,7 +48,8 @@ h1, h2, h3 {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
   gap: var(--space-lg);
-  justify-content: center;
+  margin: 0 auto;    
+  justify-content: left;
 }
 
 /* ========== CENTER PANEL GRID LAYOUT ========== */
