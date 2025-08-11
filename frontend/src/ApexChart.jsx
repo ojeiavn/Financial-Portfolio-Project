@@ -1,47 +1,61 @@
-// ApexChart.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import ApexCharts from 'apexcharts';
 
 const XAXISRANGE = 10 * 1000;
-let data = [];
-let lastDate = new Date().getTime();
+const POLL_MS = 20000;
 
-function getNewSeries(baseval, yrange) {
-  data = data.slice(data.length - XAXISRANGE / 1000);
-  const y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-  const newTime = baseval + 1000;
-  data.push([newTime, y]);
-  lastDate = newTime;
-}
-
-export const ApexChart = ({ companyName }) => {
-  const [series, setSeries] = useState([{ name: companyName, data: [] }]);
+export const ApexChart = ({ symbol, productType, apiBase = 'http://localhost:5000' }) => {
+  const [series, setSeries] = useState([{ name: symbol, data: [] }]);
   const [options, setOptions] = useState({
     chart: { id: 'realtime', type: 'line', animations: { enabled: true, easing: 'linear', dynamicAnimation: { speed: 1000 } }, toolbar: { show: false }, zoom: { enabled: false } },
-    title: { text: companyName, align: 'left', style: { color: '#FFFFFF', fontFamily: 'Helvetica, Arial, sans-serif' } },
+    title: { text: symbol, align: 'left', style: { color: '#FFFFFF', fontFamily: 'Helvetica, Arial, sans-serif' } },
     tooltip: { theme: 'dark', style: { fontSize: '14px', fontFamily: 'Helvetica, Arial, sans-serif' } },
     colors: ['#14F002'],
     stroke: { curve: 'smooth' },
     dataLabels: { enabled: false },
     markers: { size: 0 },
     xaxis: { type: 'datetime', range: XAXISRANGE, labels: { style: { colors: '#FFFFFF' } } },
-    yaxis: { max: 100, labels: { style: { colors: '#FFFFFF' } } },
+    yaxis: { labels: { style: { colors: '#FFFFFF' } } },
     legend: { show: false }
   });
 
+  const pointsRef = useRef([]);
+  const timerRef = useRef(null);
+
   useEffect(() => {
-    for (let i = 0; i < XAXISRANGE / 1000; i++) {
-      getNewSeries(lastDate, { min: 10, max: 90 });
-    }
-    setSeries([{ name: companyName, data }]);
-    setOptions(prev => ({ ...prev, title: { ...prev.title, text: companyName } }));
-    const interval = setInterval(() => {
-      getNewSeries(lastDate, { min: 10, max: 90 });
-      ApexCharts.exec('realtime', 'updateSeries', [{ name: companyName, data }]);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [companyName]);
+    pointsRef.current = [];
+    setSeries([{ name: symbol, data: [] }]);
+    setOptions(prev => ({ ...prev, title: { ...prev.title, text: symbol } }));
+
+    const tick = async () => {
+      try {
+        const res = await fetch(`${apiBase}/prices/${productType}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const arr = await res.json();
+        const item = Array.isArray(arr)
+          ? arr.find(r => r.Symbol === symbol || r.Name === symbol)
+          : null;
+
+        if (item) {
+          const raw = item.CurrentPrice ?? item.Price;
+          const y = typeof raw === 'string' ? parseFloat(raw) : Number(raw);
+          if (!Number.isNaN(y)) {
+            const t = Date.now();
+            const minT = t - XAXISRANGE;
+            const next = [...pointsRef.current.filter(([x]) => x >= minT), [t, y]];
+            pointsRef.current = next;
+            setSeries([{ name: symbol, data: next }]);
+          }
+        }
+      } catch (_) {
+      } finally {
+        timerRef.current = setTimeout(tick, POLL_MS);
+      }
+    };
+
+    tick();
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, [symbol, productType, apiBase]);
 
   return (
     <div id="chart">

@@ -10,7 +10,7 @@ export function LeftPanel({ setCompanyName }) {
 
     const load = async () => {
       try {
-        const res = await fetch(`http://192.168.1.100:5000/prices/${productType}`);
+        const res = await fetch(`http://127.0.0.1:5000/prices/${productType}`);
         if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
         const data = await res.json();
         if (!abort) setProductData(Array.isArray(data) ? data : Object.values(data || {}));
@@ -21,8 +21,8 @@ export function LeftPanel({ setCompanyName }) {
     };
 
     load();                         
-    const id = setInterval(load, 5000);
-    return () => { abort = true; clearInterval(id); };
+    //const id = setInterval(load, 10000);
+    //return () => { abort = true; clearInterval(id); };
   }, [productType]);
 
   return (
@@ -46,8 +46,9 @@ export function LeftPanel({ setCompanyName }) {
                 value={price?.toFixed(2)}
                 percentage={pct}
                 change={change.toFixed(4)}
-                name={p.Symbol}
+                name={p.Name}
                 color={current > price ? "green" : "red"}
+                symbol={p.Symbol}
                 onClick={() => setCompanyName(p.Symbol)}
               />
             </div>

@@ -1,7 +1,7 @@
 // CenterPanel.jsx
 import { ApexChart } from "./ApexChart";
 
-export function CenterPanel({ companyName }) {
+export function CenterPanel({ symbol, productType }) {
   return (
     <div className="center-panel">
       <div className="finance-card">
@@ -9,13 +9,12 @@ export function CenterPanel({ companyName }) {
         <div>Profit = $667,990</div>
       </div>
       <div className="finance-card">
-        <img src="/green-line.png" alt="Green graph" />
         <div>All time high = $678,559</div>
       </div>
       <div className="graph-box">
         <button className="overview-buttons">My Overview</button>
         <button className="overview-buttons">Company Overview</button>
-        <ApexChart companyName={companyName} />
+        <ApexChart symbol={symbol} productType={productType} />
       </div>
       <div className="news-ticker">
         <ul>

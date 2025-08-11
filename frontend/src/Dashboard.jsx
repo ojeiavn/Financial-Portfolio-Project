@@ -6,13 +6,13 @@ import { RightPanel } from "./RightPanel";
 import LiveClock from "./LiveClock";
 
 export function Dashboard() {
-  const [companyName, setCompanyName] = useState("APPLE");
+  const [symbol, setSymbol] = useState("NVDA");
+  const [productType, setProductType] = useState("stock");
 
   return (
-    
     <div className="dashboard">
-      <LeftPanel setCompanyName={setCompanyName} />
-      <CenterPanel companyName={companyName} />
+      <LeftPanel setCompanyName={setSymbol} setProductType={setProductType} />
+      <CenterPanel symbol={symbol} productType={productType} />
       <RightPanel />
     </div>
   );
