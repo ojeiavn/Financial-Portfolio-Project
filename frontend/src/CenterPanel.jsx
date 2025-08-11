@@ -5,7 +5,6 @@ export function CenterPanel({ symbol, productType }) {
   return (
     <div className="center-panel">
       <div className="finance-card">
-        PLACEHOLDER
         <div>Profit = $667,990</div>
       </div>
       <div className="finance-card">
